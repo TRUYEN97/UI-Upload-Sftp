@@ -1,0 +1,138 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\C#\\Upload\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\common\\pathutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\common\\pathutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\common\\ziphelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\common\\ziphelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\mysftp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\mysftp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\common\\tranforutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\common\\tranforutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ZipHelper.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\common\\ZipHelper.cs",
+              "RelativeDocumentMoniker": "Upload\\common\\ZipHelper.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\common\\ZipHelper.cs",
+              "RelativeToolTip": "Upload\\common\\ZipHelper.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAYwEQAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:56:10.133Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MySftp.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\MySftp.cs",
+              "RelativeDocumentMoniker": "Upload\\MySftp.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\MySftp.cs",
+              "RelativeToolTip": "Upload\\MySftp.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF8CAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:49:26.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TranforUtil.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\common\\TranforUtil.cs",
+              "RelativeDocumentMoniker": "Upload\\common\\TranforUtil.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\common\\TranforUtil.cs",
+              "RelativeToolTip": "Upload\\common\\TranforUtil.cs",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAswPAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:48:53.989Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PathUtil.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\common\\PathUtil.cs",
+              "RelativeDocumentMoniker": "Upload\\common\\PathUtil.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\common\\PathUtil.cs",
+              "RelativeToolTip": "Upload\\common\\PathUtil.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAiwDAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:41:15.688Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LocationCreater.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\LocationCreater.cs",
+              "RelativeDocumentMoniker": "Upload\\Service\\LocationCreater.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\LocationCreater.cs",
+              "RelativeToolTip": "Upload\\Service\\LocationCreater.cs",
+              "ViewState": "AgIAAKgAAAAAAAAAAAAcwN0AAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:39:28.398Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FormMain.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs",
+              "RelativeDocumentMoniker": "Upload\\gui\\FormMain.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs",
+              "RelativeToolTip": "Upload\\gui\\FormMain.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABwAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:38:45.62Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FormMain.cs [Design]",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs",
+              "RelativeDocumentMoniker": "Upload\\gui\\FormMain.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs [Design]",
+              "RelativeToolTip": "Upload\\gui\\FormMain.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-29T08:38:44.18Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
