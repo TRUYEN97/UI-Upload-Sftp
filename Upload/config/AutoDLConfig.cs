@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace AutoDownload.Config
+namespace Upload.Config
 {
     public class AutoDLConfig
     {

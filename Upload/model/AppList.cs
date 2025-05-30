@@ -4,16 +4,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upload.model;
+using Upload.Model;
+using Upload.Service;
 
 namespace AutoDownload.Model
 {
     internal class AppList
     {
-        public AppList() { 
-
-        }
-        public Dictionary <string, string> ProgramPaths {  get; set; } = new Dictionary<string, string>();
-
+        public Dictionary <string, ProgramPathModel> ProgramPaths {  get; set; } = new Dictionary<string, ProgramPathModel>();
     }
 }

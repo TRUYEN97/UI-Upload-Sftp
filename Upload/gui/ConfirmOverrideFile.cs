@@ -3,15 +3,15 @@ using System.Windows.Forms;
 
 namespace Upload.gui
 {
-    public partial class ConfirmOverrideFile : Form
+    public partial class ConfirmOverrideForm : Form
     {
         private int isAll = 0;
-        public ConfirmOverrideFile()
+        public ConfirmOverrideForm()
         {
             InitializeComponent();
         }
 
-        public bool IsAccerpt(string mess)
+        public bool IsAccept(string mess)
         {
             if (isAll != 0)
             {

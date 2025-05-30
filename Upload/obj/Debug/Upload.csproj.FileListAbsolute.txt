@@ -38,7 +38,6 @@ D:\C#\Upload\Upload\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\C#\Upload\Upload\bin\Debug\System.ValueTuple.xml
 D:\C#\Upload\Upload\obj\Debug\Upload.csproj.Up2Date
 D:\C#\Upload\Upload\obj\Debug\Upload.gui.InputForm.resources
-D:\C#\Upload\Upload\obj\Debug\Upload.gui.ConfirmOverrideFile.resources
 D:\C#\Upload\Upload\bin\Debug\Ookii.Dialogs.Wpf.dll
 D:\C#\Upload\Upload\bin\Debug\Ookii.Dialogs.Wpf.pdb
 D:\C#\Upload\Upload\bin\Debug\Ookii.Dialogs.Wpf.xml
@@ -49,3 +48,7 @@ D:\C#\Upload\Upload\obj\Debug\Upload.gui.ProgressDialogForm.resources
 D:\C#\Upload\Upload\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\C#\Upload\Upload\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\C#\Upload\Upload\bin\Debug\ICSharpCode.SharpZipLib.xml
+D:\C#\Upload\Upload\obj\Debug\Upload.gui.UserForm.resources
+D:\C#\Upload\Upload\obj\Debug\Upload.gui.ConfirmOverrideForm.resources
+D:\C#\Upload\Upload\obj\Debug\Upload.gui.AccessUserListForm.resources
+D:\C#\Upload\Upload\obj\Debug\Upload.gui.AccessUserControl.resources

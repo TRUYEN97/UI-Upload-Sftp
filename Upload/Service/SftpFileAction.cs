@@ -3,9 +3,8 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Common;
-using Upload.common;
-using Upload.model;
+using Upload.Common;
+using Upload.Model;
 
 namespace Upload.Service
 {

@@ -6,18 +6,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
-using AutoDownload.Common;
 using AutoDownload.Gui;
 using Ookii.Dialogs.Wpf;
-using Upload.common;
+using Upload.Common;
 using Upload.gui;
-using Upload.model;
+using Upload.Model;
+using Upload.Service;
 using static Upload.Service.LockManager;
 using Cursors = System.Windows.Forms.Cursors;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
-namespace Upload.Service
+namespace Upload.ModelView
 {
     internal class MyTreeFolder
     {
@@ -72,7 +71,7 @@ namespace Upload.Service
                     {
                         try
                         {
-                            LockManager.Instance.ForceLockAll(Reasons.LOCK_LOAD_FILES);
+                            ForceLockAll(Reasons.LOCK_LOAD_FILES);
                             CursorUtil.SetCursorIs(Cursors.WaitCursor);
                             Util.SafeInvoke(treeView, () =>
                             {
@@ -118,7 +117,7 @@ namespace Upload.Service
                             });
                             _isEmpty = false;
                             RemoteDir = remoteDir;
-                            LockManager.Instance.ForceUnlockAll(Reasons.LOCK_LOAD_FILES);
+                            ForceUnlockAll(Reasons.LOCK_LOAD_FILES);
                         }
                         finally
                         {
@@ -230,9 +229,9 @@ namespace Upload.Service
         private void InitTreeContextMenu()
         {
 
-            _treeContextMenu.Items.Add("Download", null, (s, e) =>
+            _treeContextMenu.Items.Add("Download", null, async (s, e) =>
             {
-                DownloadAll();
+                await DownloadAll();
             });
 
             _treeContextMenu.Items.Add("Tạo thư mục", null, (s, e) =>
@@ -240,14 +239,14 @@ namespace Upload.Service
                 CreateFolder();
             });
 
-            _treeContextMenu.Items.Add("Thêm file", null, (s, e) =>
+            _treeContextMenu.Items.Add("Thêm file", null, async (s, e) =>
             {
-                AddFiles();
+                await AddFiles();
             });
 
-            _treeContextMenu.Items.Add("Thêm folder", null, (s, e) =>
+            _treeContextMenu.Items.Add("Thêm folder", null, async (s, e) =>
             {
-                AddFolder();
+                await AddFolder();
             });
 
         }

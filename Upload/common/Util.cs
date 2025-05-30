@@ -3,33 +3,33 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Config;
 using AutoDownload.Gui;
-using AutoDownload.Model;
-using Newtonsoft.Json;
-using Ookii.Dialogs.Wpf;
-using Upload.gui;
+using Upload.Config;
 
-namespace AutoDownload.Common
+namespace Upload.Common
 {
     public class Util
     {
         public static void SafeInvoke(Control control, Action updateAction)
         {
-            if (control == null)
+            try
             {
-                return;
+                if (control == null)
+                {
+                    return;
+                }
+                if (control.InvokeRequired)
+                {
+                    control.Invoke(updateAction);
+                }
+                else
+                {
+                    updateAction();
+                }
             }
-            if (control.InvokeRequired)
+            catch (Exception)
             {
-                control.Invoke(updateAction);
-            }
-            else
-            {
-                updateAction();
             }
         }
 

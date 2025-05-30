@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Common;
-using AutoDownload.Config;
 using AutoDownload.Model;
 using Newtonsoft.Json;
-using Upload.common;
+using Upload.Common;
 using Upload.gui;
+using Upload.Model;
 
 namespace Upload.Service
 {
@@ -22,17 +20,17 @@ namespace Upload.Service
         private readonly ComboBox cbbStation;
         private readonly ComboBox cbbProgram;
         private readonly string zipPassword;
-        public event Action<string> ShowVerionAction;
+        public event Action<ProgramPathModel> ShowVerionAction;
 
-        public LocationManagement(FormMain formMain, string zipPw) 
+        public LocationManagement(FormMain formMain)
         {
+            this.zipPassword = ConstKey.ZIP_PASSWORD;
             this.Location = new Location();
-            this._locatonCreater = new LocationCreater(zipPw);
+            this._locatonCreater = new LocationCreater(zipPassword);
             this.formMain = formMain;
             this.cbbProduct = formMain.CbbProduct;
             this.cbbStation = formMain.CbbStation;
             this.cbbProgram = formMain.CbbProgram;
-            this.zipPassword = zipPw;
             InitButtonEnvent();
             InitComboboxEvent();
         }

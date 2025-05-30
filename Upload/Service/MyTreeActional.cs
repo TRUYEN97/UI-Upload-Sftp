@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AutoDownload.Common;
 using System.Windows.Forms;
-using Upload.common;
-using Upload.model;
+using Upload.Common;
+using Upload.Model;
 using System.IO;
 using Upload.gui;
-using AutoDownload.Config;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using AutoDownload.Gui;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using static Upload.Service.LockManager;
+using Upload.Config;
 
 namespace Upload.Service
 {
@@ -68,7 +65,7 @@ namespace Upload.Service
                         {
                             int count = 0;
                             CursorUtil.SetCursorIs(Cursors.WaitCursor);
-                            ConfirmOverrideFile confirmOverrideFile = new ConfirmOverrideFile();
+                            ConfirmOverrideForm confirmOverrideFile = new ConfirmOverrideForm();
                             var stack = new Stack<(TreeNodeCollection nodes, string path)>();
                             stack.Push((rootNodes, rootFolderPath));
                             bool checkUnique = FindFolder(rootNodes, Path.GetFileName(rootFolderPath)) != null;
@@ -195,7 +192,7 @@ namespace Upload.Service
                             try
                             {
                                 LockManager.Instance.SetLock(true, Reasons.LOCK_UPDATE);
-                                ConfirmOverrideFile confirmOverrideFile = new ConfirmOverrideFile();
+                                ConfirmOverrideForm confirmOverrideFile = new ConfirmOverrideForm();
                                 foreach (string filePath in fileNames)
                                 {
                                     AddNewMode(nodes, filePath, confirmOverrideFile);
@@ -243,7 +240,7 @@ namespace Upload.Service
             return folderNode;
         }
 
-        private void AddNewMode(TreeNodeCollection nodes, string filePath, ConfirmOverrideFile confirmOverrideFile = null, bool checkUnique = true)
+        private void AddNewMode(TreeNodeCollection nodes, string filePath, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
         {
             string fileName = Path.GetFileName(filePath);
             TreeNode node = new TreeNode(fileName);
@@ -332,7 +329,7 @@ namespace Upload.Service
             });
         }
 
-        internal void AddFileNode(TreeNodeCollection nodes, TreeNode fileNode, FileModel fileModel, ConfirmOverrideFile confirmOverrideFile = null, bool checkUnique = true)
+        internal void AddFileNode(TreeNodeCollection nodes, TreeNode fileNode, FileModel fileModel, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
         {
             string text = fileNode.Text;
             string ext = Path.GetExtension(text).ToLower();
@@ -374,7 +371,7 @@ namespace Upload.Service
                     }
                     nodes.Add(fileNode);
                 }
-                else if (confirmOverrideFile == null || confirmOverrideFile.IsAccerpt($"\"{text}\" đã tồn tại!\r\nBạn muốn update file này không?"))
+                else if (confirmOverrideFile == null || confirmOverrideFile.IsAccept($"\"{text}\" đã tồn tại!\r\nBạn muốn update file này không?"))
                 {
                     fileNode.ForeColor = FILE_UPDATE_COLOR;
 

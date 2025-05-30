@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace AutoDownload.Common
+namespace Upload.Common
 {
     public class PcInfo
     {

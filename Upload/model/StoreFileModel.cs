@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upload.model
+namespace Upload.Model
 {
     internal class StoreFileModel : FileModel
     {

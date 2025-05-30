@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoDownload.Config;
+﻿using System.IO;
+using Upload.Config;
 
-namespace AutoDownload.Common
+namespace Upload.Common
 {
     internal class PathUtil
     {
@@ -30,9 +25,19 @@ namespace AutoDownload.Common
             return Path.Combine(GetStationPath(location), "Program");
         }
         
+        internal static string GetAccessUserFolderPath(Location location)
+        {
+            return Path.Combine(GetStationPath(location), "AccessUser");
+        }
+        
         internal static string GetAppModelPath(Location location)
         {
             return Path.Combine(GetProgramFolderPath(location), $"{location.AppName}.zip");
+        }
+
+        internal static string GetAppAccessUserPath(Location location)
+        {
+            return Path.Combine(GetAccessUserFolderPath(location), $"{location.AppName}.zip");
         }
 
         internal static string GetAppConfigRemotePath(Location location)

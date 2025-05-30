@@ -2,78 +2,116 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using AutoDownload.Common;
-using Org.BouncyCastle.Asn1.Crmf;
+using Upload.Common;
 
 namespace Upload.Service
 {
     public class LockManager
     {
         private static readonly Lazy<LockManager> _instance = new Lazy<LockManager>(() => new LockManager());
-        public enum Reasons 
+        public enum Reasons
         {
             LOCK_UPDATE,
             LOCK_INPUT,
             LOCK_LOCATION,
             LOCK_PASSWORD,
             LOCK_CREATE_BT,
-            LOCK_LOAD_FILES
+            LOCK_LOAD_FILES,
+            LOCK_ACCESS_USER_UPDATE
         }
-        private readonly Dictionary<Control, HashSet<Reasons>> _lockReasons = new Dictionary<Control, HashSet<Reasons>>();
-        private readonly Dictionary<Reasons, HashSet<Control>> ReasonGroupControls = new Dictionary<Reasons, HashSet<Control>>();
+        private readonly Dictionary<object, HashSet<Reasons>> _lockReasons = new Dictionary<object, HashSet<Reasons>>();
+        private readonly Dictionary<Reasons, HashSet<object>> ReasonGroupControls = new Dictionary<Reasons, HashSet<object>>();
 
         private LockManager() { }
         public static LockManager Instance => _instance.Value;
-        private void Lock(Control ctrl, Reasons reason)
+        private void Lock(object obj, Reasons reason)
         {
-            if (!_lockReasons.ContainsKey(ctrl))
-                _lockReasons[ctrl] = new HashSet<Reasons>();
+            if (!_lockReasons.ContainsKey(obj))
+                _lockReasons[obj] = new HashSet<Reasons>();
 
-            _lockReasons[ctrl].Add(reason);
-            if (ctrl is TextBoxBase textBox)
+            _lockReasons[obj].Add(reason);
+            if (obj is Control control)
             {
-                Util.SafeInvoke(textBox, () =>
+                if (control is TextBoxBase textBox)
                 {
-                    textBox.ReadOnly = true;
-                });
+                    Util.SafeInvoke(textBox, () =>
+                    {
+                        textBox.ReadOnly = true;
+                    });
+                }
+                else
+                {
+                    Util.SafeInvoke(control, () =>
+                    {
+                        control.Enabled = false;
+                    });
+                }
             }
-            else
+            else if (obj is LockActionCallBack action)
             {
-                Util.SafeInvoke(ctrl, () =>
-                {
-                    ctrl.Enabled = false;
-                });
+                action.lockCallBack?.Invoke();
             }
         }
 
-        private void Unlock(Control ctrl, Reasons reason)
+        private void Unlock(object obj, Reasons reason)
         {
-            if (_lockReasons.ContainsKey(ctrl))
+            if (_lockReasons.ContainsKey(obj))
             {
-                _lockReasons[ctrl].Remove(reason);
+                _lockReasons[obj].Remove(reason);
 
-                if (_lockReasons[ctrl].Count == 0)
+                if (_lockReasons[obj].Count == 0)
                 {
-                    if (ctrl is TextBoxBase textBox)
+                    if (obj is Control control)
                     {
-                        Util.SafeInvoke(textBox, () =>
+                        if (control is TextBoxBase textBox)
                         {
-                            textBox.ReadOnly = false;
-                        });
+                            Util.SafeInvoke(textBox, () =>
+                            {
+                                textBox.ReadOnly = false;
+                            });
+                        }
+                        else
+                        {
+                            Util.SafeInvoke(control, () =>
+                            {
+                                control.Enabled = true;
+                            });
+                        }
                     }
-                    else
+                    else if (obj is LockActionCallBack action)
                     {
-                        Util.SafeInvoke(ctrl, () =>
-                        {
-                            ctrl.Enabled = true;
-                        });
+                        action.UnlockCallBack?.Invoke();
                     }
-                    _lockReasons.Remove(ctrl);
+                    _lockReasons.Remove(obj);
                 }
             }
         }
 
-        public void ForceUnlockAll(Reasons reason)
+        private void Add(Reasons reason, object obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+            HashSet<object> groupElms = GroupControls(reason);
+            if (groupElms == null)
+            {
+                groupElms = new HashSet<object>();
+                this.ReasonGroupControls.Add(reason, groupElms);
+            }
+            groupElms.Add(obj);
+        }
+        internal static void ForceUnlockAll(Reasons reason)
+        {
+            Instance.UnlockAll(reason);
+        }
+
+        internal static void ForceLockAll(Reasons reason)
+        {
+            Instance.LockAll(reason);
+        }
+
+        internal void UnlockAll(Reasons reason)
         {
             foreach (var pair in _lockReasons.ToList())
             {
@@ -81,9 +119,9 @@ namespace Upload.Service
             }
         }
 
-        public void ForceLockAll(Reasons reason)
+        internal void LockAll(Reasons reason)
         {
-            HashSet<Control> groupElms;
+            HashSet<object> groupElms;
             if (this.ReasonGroupControls.ContainsKey(reason) && (groupElms = this.ReasonGroupControls[reason]) != null)
             {
                 foreach (var ctrl in groupElms)
@@ -93,13 +131,23 @@ namespace Upload.Service
             }
         }
 
-        internal HashSet<Control> GroupControls(Reasons reason)
+        internal static HashSet<object> GetGroupControls(Reasons reason)
+        {
+            return Instance.GroupControls(reason);
+        }
+
+        internal HashSet<object> GroupControls(Reasons reason)
         {
             if (this.ReasonGroupControls.ContainsKey(reason))
             {
                 return this.ReasonGroupControls[reason];
             }
             return null;
+        }
+
+        internal static void SetLockFor(bool lockUpdate, Reasons reason)
+        {
+            Instance.SetLock(lockUpdate, reason);
         }
 
         internal void SetLock(bool lockUpdate, Reasons reason)
@@ -114,34 +162,34 @@ namespace Upload.Service
             }
         }
 
-        internal void AddToGroup(Reasons reason, Control control)
+        internal static void AddToGroup(Reasons reason, Control control)
         {
-            if (control == null )
-            {
-                return;
-            }
-            HashSet<Control> groupElms = GroupControls(reason);
-            if (groupElms == null)
-            {
-                groupElms = new HashSet<Control>();
-                this.ReasonGroupControls.Add(reason, groupElms);
-            }
-            groupElms.Add(control);
+            Instance.Add(reason, control);
         }
 
-        internal void AddToGroup(Reasons reason, ICollection<Control> controls)
+        internal static void AddToGroup(Reasons reason, LockActionCallBack action)
         {
-            if (controls == null || controls.Count == 0)
+            Instance.Add(reason, action);
+        }
+
+        internal static void AddToGroupFor(Reasons reason, ICollection<object> objs)
+        {
+            Instance.AddToGroup(reason, objs);
+        }
+
+        internal void AddToGroup(Reasons reason, ICollection<object> objs)
+        {
+            if (objs == null || objs.Count == 0)
             {
                 return;
             }
-            HashSet<Control> groupElms = GroupControls(reason);
+            HashSet<object> groupElms = GroupControls(reason);
             if (groupElms == null)
             {
-                groupElms = new HashSet<Control>();
+                groupElms = new HashSet<object>();
                 this.ReasonGroupControls.Add(reason, groupElms);
             }
-            foreach (var control in controls)
+            foreach (var control in objs)
             {
                 groupElms.Add(control);
             }

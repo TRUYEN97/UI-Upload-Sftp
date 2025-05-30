@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Common;
 
-namespace Upload.common
+namespace Upload.Common
 {
     internal class CursorUtil
     {

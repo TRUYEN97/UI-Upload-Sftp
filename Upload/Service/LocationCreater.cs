@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Common;
 using AutoDownload.Model;
-using Upload.common;
+using Upload.Common;
+using Upload.Model;
 
 namespace Upload
 {
@@ -218,17 +218,28 @@ namespace Upload
                 {
                     if (!model.ProgramPaths.ContainsKey(loca.AppName))
                     {
-                        string versionPath = PathUtil.GetAppModelPath(location);
+                        string programDataPath = PathUtil.GetAppModelPath(loca);
+                        string programAccessUserPath = PathUtil.GetAppAccessUserPath(loca);
                         if (!await TranforUtil.UploadModel(new AppModel()
                         {
-                            RemoteStoreDir = PathUtil.GetCommonPath(location),
+                            RemoteStoreDir = PathUtil.GetCommonPath(loca),
                             RemoteAppListPath = responceRs.Item2,
-                            Path = versionPath
-                        }, versionPath, zipPassword))
+                            Path = programDataPath
+                        }, programDataPath, zipPassword))
                         {
+                            Util.ShowMessager($"Trạm {loca.Station} tạo app data thất bại!");
                             return false;
                         }
-                        model.ProgramPaths.Add(loca.AppName, versionPath);
+                        if (!await TranforUtil.UploadModel(new AccessUserListModel(), programAccessUserPath, zipPassword))
+                        {
+                            Util.ShowMessager($"Trạm {loca.Station} tạo dữ liệu access user thất bại!");
+                            return false;
+                        }
+                        model.ProgramPaths.Add(loca.AppName, new ProgramPathModel()
+                        {
+                            AccectUserPath = programAccessUserPath,
+                            AppPath = programDataPath
+                        });
                     }
                 }
                 if ((await TranforUtil.UpLoadAppListModel(model, loca, zipPassword)).Item1)

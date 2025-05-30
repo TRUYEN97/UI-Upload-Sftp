@@ -1,6 +1,5 @@
-﻿using System;
-
-namespace AutoDownload.Config
+﻿
+namespace Upload.Config
 {
     public class SftpConfig
     {

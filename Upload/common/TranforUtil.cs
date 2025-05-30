@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Common;
+using AutoDownload.Gui;
 using AutoDownload.Model;
 using Newtonsoft.Json;
-using Renci.SshNet;
 using Upload.gui;
-using Upload.model;
+using Upload.Model;
 
-namespace Upload.common
+namespace Upload.Common
 {
     internal class TranforUtil
     {
@@ -225,7 +223,8 @@ namespace Upload.common
                     catch (Exception ex)
                     {
                         string errorStr = $"File appConfig.json tại: {path} có thể bị lỗi format.\r\nHãy kiểm tra thủ công để tránh mất dữ liệu!";
-                        throw new Exception(errorStr, ex);
+                        LoggerBox.Addlog($"{ex.Message}: {errorStr}");
+                        return default;
                     }
                 }
 

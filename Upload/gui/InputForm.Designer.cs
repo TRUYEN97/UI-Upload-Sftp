@@ -68,7 +68,6 @@
         }
 
         #endregion
-
         private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Label lbLbTitle;
     }

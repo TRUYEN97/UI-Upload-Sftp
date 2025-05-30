@@ -1,8 +1,6 @@
 ﻿
 
-using AutoDownload.Common;
-
-namespace AutoDownload.Config
+namespace Upload.Config
 {
     public class ConfigModel
     {

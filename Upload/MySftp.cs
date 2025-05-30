@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
-using Upload.common;
+using Upload.Common;
 
-namespace AutoDownload
+namespace Upload
 {
     public class MySftp : IDisposable
     {

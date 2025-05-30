@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AutoDownload.Common
+namespace Upload.Common
 {
     public class Location
     {

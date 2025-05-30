@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
+using AutoDownload.Gui;
 using ICSharpCode.SharpZipLib.Zip;
-using Renci.SshNet;
 
-namespace Upload.common
+namespace Upload.Common
 {
     internal class ZipHelper
     {
@@ -15,91 +14,110 @@ namespace Upload.common
             Directory.CreateDirectory(Path.GetDirectoryName(localPath));
             await Task.Run(() =>
             {
-                using (var zipInput = new ZipInputStream(zipStream))
+                try
                 {
-                    if (!string.IsNullOrWhiteSpace(zipPassword))
+                    using (var zipInput = new ZipInputStream(zipStream))
                     {
-                        zipInput.Password = zipPassword;
+                        if (!string.IsNullOrWhiteSpace(zipPassword))
+                        {
+                            zipInput.Password = zipPassword;
+                        }
+                        ZipEntry entry = zipInput.GetNextEntry() ?? throw new InvalidOperationException("File ZIP Empty!");
+                        if (entry.IsDirectory)
+                            throw new InvalidOperationException("First file is Directory");
+                        using (var outputStream = File.Create(localPath))
+                        {
+                            zipInput.CopyTo(outputStream);
+                        }
                     }
-                    ZipEntry entry = zipInput.GetNextEntry() ?? throw new InvalidOperationException("File ZIP rỗng.");
-                    if (entry.IsDirectory)
-                        throw new InvalidOperationException("File đầu tiên trong ZIP là thư mục.");
-                    using (var outputStream = File.Create(localPath))
-                    {
-                        zipInput.CopyTo(outputStream);
-                    }
+                }
+                catch (ZipException ex)
+                {
+                    LoggerBox.Addlog($"Extract: {ex.Message}");
                 }
             });
         }
 
-        public static async Task<Stream> ZipSingleFiletoStream(string entryName, Stream zipStream, string localPath, string zipPassword = null)
+        public static async Task ZipSingleFiletoStream(string entryName, Stream zipStream, string localPath, string zipPassword = null)
         {
-            return await Task.Run(() =>
+            await Task.Run(() =>
             {
-                using (var zipOutputStream = new ZipOutputStream(zipStream))
+                try
                 {
-                    zipOutputStream.SetLevel(9); // Mức nén tối đa
-                    if (!string.IsNullOrWhiteSpace(zipPassword))
+                    using (var zipOutputStream = new ZipOutputStream(zipStream))
                     {
-                        zipOutputStream.Password = zipPassword;
+                        zipOutputStream.SetLevel(9); // Mức nén tối đa
+                        if (!string.IsNullOrWhiteSpace(zipPassword))
+                        {
+                            zipOutputStream.Password = zipPassword;
+                        }
+                        var entry = new ZipEntry(entryName)
+                        {
+                            DateTime = File.GetLastWriteTime(localPath)
+                        };
+                        zipOutputStream.PutNextEntry(entry);
+                        using (var fileStream = File.OpenRead(localPath))
+                        {
+                            fileStream.CopyTo(zipOutputStream);
+                        }
+                        zipOutputStream.CloseEntry();
+                        zipOutputStream.IsStreamOwner = false;
+                        zipOutputStream.Close();
+                        zipStream.Position = 0;
                     }
-                    var entry = new ZipEntry(entryName)
-                    {
-                        DateTime = File.GetLastWriteTime(localPath)
-                    };
-                    zipOutputStream.PutNextEntry(entry);
-                    using (var fileStream = File.OpenRead(localPath))
-                    {
-                        fileStream.CopyTo(zipOutputStream);
-                    }
-                    zipOutputStream.CloseEntry();
-                    zipOutputStream.IsStreamOwner = false;
-                    zipOutputStream.Close();
-                    zipStream.Position = 0;
                 }
-                return zipStream;
+                catch (ZipException ex)
+                {
+                    LoggerBox.Addlog($"Zip: {ex.Message}");
+                }
             });
         }
 
         public static void ExtractZipWithPassword(string zipFilePath, string extractDirectory, string password)
         {
             if (!File.Exists(zipFilePath))
-                throw new FileNotFoundException("Không tìm thấy file ZIP.", zipFilePath);
-
-            Directory.CreateDirectory(extractDirectory);
-
-            using (var fs = File.OpenRead(zipFilePath))
-            using (var zipStream = new ZipInputStream(fs))
+                throw new FileNotFoundException("ZIP file not found.", zipFilePath);
+            try
             {
-                if (!string.IsNullOrWhiteSpace(password))
+                Directory.CreateDirectory(extractDirectory);
+
+                using (var fs = File.OpenRead(zipFilePath))
+                using (var zipStream = new ZipInputStream(fs))
                 {
-                    zipStream.Password = password;
-                }
-                ZipEntry entry;
-                while ((entry = zipStream.GetNextEntry()) != null)
-                {
-                    if (string.IsNullOrWhiteSpace(entry.Name))
-                        continue;
-
-                    string fullPath = Path.Combine(extractDirectory, entry.Name);
-
-                    // Chống path traversal
-                    if (!fullPath.StartsWith(Path.GetFullPath(extractDirectory), StringComparison.OrdinalIgnoreCase))
-                        throw new InvalidOperationException("Đường dẫn không hợp lệ trong ZIP.");
-
-                    if (entry.IsDirectory)
+                    if (!string.IsNullOrWhiteSpace(password))
                     {
-                        Directory.CreateDirectory(fullPath);
-                        continue;
+                        zipStream.Password = password;
                     }
-
-                    Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-
-                    using (var outputStream = File.Create(fullPath))
+                    ZipEntry entry;
+                    while ((entry = zipStream.GetNextEntry()) != null)
                     {
-                        zipStream.CopyTo(outputStream);
+                        if (string.IsNullOrWhiteSpace(entry.Name))
+                            continue;
+
+                        string fullPath = Path.Combine(extractDirectory, entry.Name);
+
+                        // Chống path traversal
+                        if (!fullPath.StartsWith(Path.GetFullPath(extractDirectory), StringComparison.OrdinalIgnoreCase))
+                            throw new InvalidOperationException("Path invalid ZIP.");
+
+                        if (entry.IsDirectory)
+                        {
+                            Directory.CreateDirectory(fullPath);
+                            continue;
+                        }
+
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+
+                        using (var outputStream = File.Create(fullPath))
+                        {
+                            zipStream.CopyTo(outputStream);
+                        }
                     }
                 }
+            }
+            catch (ZipException ex)
+            {
+                LoggerBox.Addlog($"Extract: {ex.Message}");
             }
         }
 
@@ -109,30 +127,37 @@ namespace Upload.common
             {
                 if (!File.Exists(zipFilePath))
                     throw new FileNotFoundException(zipFilePath);
-                using (var fs = File.OpenRead(zipFilePath))
-                using (var zipStream = new ZipInputStream(fs))
+                try
                 {
-                    if (!string.IsNullOrWhiteSpace(password))
+                    using (var fs = File.OpenRead(zipFilePath))
+                    using (var zipStream = new ZipInputStream(fs))
                     {
-                        zipStream.Password = password;
+                        if (!string.IsNullOrWhiteSpace(password))
+                        {
+                            zipStream.Password = password;
+                        }
+                        ZipEntry entry;
+                        if ((entry = zipStream.GetNextEntry()) != null)
+                        {
+                            if (entry.IsDirectory)
+                            {
+                                throw new Exception($"Zip file invailed: {targetPath}");
+                            }
+                            string dir = Path.GetDirectoryName(targetPath);
+                            if (!string.IsNullOrWhiteSpace(dir))
+                            {
+                                Directory.CreateDirectory(dir);
+                            }
+                            using (var outputStream = File.Create(targetPath))
+                            {
+                                zipStream.CopyTo(outputStream);
+                            }
+                        }
                     }
-                    ZipEntry entry;
-                    if ((entry = zipStream.GetNextEntry()) != null)
-                    {
-                        if (entry.IsDirectory)
-                        {
-                            throw new Exception($"Zip file invailed: {targetPath}");
-                        }
-                        string dir = Path.GetDirectoryName(targetPath);
-                        if (!string.IsNullOrWhiteSpace(dir))
-                        {
-                            Directory.CreateDirectory(dir);
-                        }
-                        using (var outputStream = File.Create(targetPath))
-                        {
-                            zipStream.CopyTo(outputStream);
-                        }
-                    }
+                }
+                catch (ZipException ex)
+                {
+                    LoggerBox.Addlog($"Extract: {ex.Message}");
                 }
             });
         }
@@ -170,27 +195,35 @@ namespace Upload.common
         {
             return await Task.Run(() =>
             {
-                if (memStream != null)
+                try
                 {
-                    memStream.Position = 0;
-                    using (var zipStream = new ZipInputStream(memStream))
+                    if (memStream != null)
                     {
-                        if (!string.IsNullOrWhiteSpace(password))
+                        memStream.Position = 0;
+                        using (var zipStream = new ZipInputStream(memStream))
                         {
-                            zipStream.Password = password;
-                        }
-                        ZipEntry entry;
-                        while ((entry = zipStream.GetNextEntry()) != null)
-                        {
-                            if (!entry.IsDirectory)
+                            if (!string.IsNullOrWhiteSpace(password))
                             {
-                                using (var reader = new StreamReader(zipStream, Encoding.UTF8))
+                                zipStream.Password = password;
+                            }
+                            ZipEntry entry;
+                            while ((entry = zipStream.GetNextEntry()) != null)
+                            {
+                                if (!entry.IsDirectory)
                                 {
-                                    return reader.ReadToEnd();
+                                    using (var reader = new StreamReader(zipStream, Encoding.UTF8))
+                                    {
+                                        return reader.ReadToEnd();
+                                    }
                                 }
                             }
                         }
                     }
+
+                }
+                catch (ZipException ex)
+                {
+                    LoggerBox.Addlog($"Extract: {ex.Message}");
                 }
                 return null;
             });

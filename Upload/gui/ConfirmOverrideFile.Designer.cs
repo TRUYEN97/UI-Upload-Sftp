@@ -1,6 +1,6 @@
 ﻿namespace Upload.gui
 {
-    partial class ConfirmOverrideFile
+    partial class ConfirmOverrideForm
     {
         /// <summary>
         /// Required designer variable.

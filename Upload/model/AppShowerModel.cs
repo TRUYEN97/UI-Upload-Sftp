@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoDownload.Model;
 
-namespace Upload.model
+namespace Upload.Model
 {
     internal class AppShowerModel
     {
