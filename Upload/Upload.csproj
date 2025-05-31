@@ -131,6 +131,7 @@
     <Compile Include="Common\ConstKey.cs" />
     <Compile Include="Common\CursorUtil.cs" />
     <Compile Include="Common\LockActionCallBack.cs" />
+    <Compile Include="Common\PasswordLocker.cs" />
     <Compile Include="Common\ProgramInfo.cs" />
     <Compile Include="Common\ZipHelper.cs" />
     <Compile Include="gui\AccessUserControl.cs">

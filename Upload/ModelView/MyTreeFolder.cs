@@ -359,7 +359,6 @@ namespace Upload.ModelView
         {
             TreeNodeCollection nodes = _myTreeActional.GetNodeCollection();
             if (nodes == null) return;
-            CursorUtil.SetCursorIs(Cursors.WaitCursor);
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Multiselect = true;

@@ -698,7 +698,7 @@ namespace Upload
         public System.Windows.Forms.Button BtUpdate { get { return btUpdate; } }
         public System.Windows.Forms.TreeView TreeVersion { get { return treeFolder; } }
         public System.Windows.Forms.CheckBox CbEnabled { get { return cbEnabled; } }
-        public System.Windows.Forms.TextBox TxtWindowName { get { return txtVersion; } }
+        public System.Windows.Forms.TextBox TxtVersion { get { return txtVersion; } }
         public System.Windows.Forms.TextBox TxtMainFile { get { return txtMainFile; } }
         public System.Windows.Forms.TextBox TxtCloseCmd { get { return txtCloseCmd; } }
         public System.Windows.Forms.TextBox TxtBOMVersion { get { return txtBOMVersion; } }

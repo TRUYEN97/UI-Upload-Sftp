@@ -49,7 +49,7 @@ namespace Upload.Service
                 Location.AppName = cbbProgram.SelectedItem.ToString();
             }
         }
-        
+
         private async Task UpdateProductItem()
         {
             try
@@ -65,7 +65,7 @@ namespace Upload.Service
             {
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
-            
+
         }
 
         private async Task UpdateStationItems()
@@ -98,6 +98,12 @@ namespace Upload.Service
 
             this.formMain.BtDeleteProduct.Click += (s, e) =>
             {
+                if (string.IsNullOrWhiteSpace(Location.Product)
+                    || MessageBox.Show($"Bạn có muốn xóa [{Location.Product}] không?", "Cảnh báo", MessageBoxButtons.YesNo) != DialogResult.Yes
+                    || !PasswordLocker.CheckPassword())
+                {
+                    return;
+                }
                 Task.Run(async () =>
                 {
                     if (await _locatonCreater.DeleteProduct(Location))
@@ -125,6 +131,12 @@ namespace Upload.Service
 
             this.formMain.BtDeleteStation.Click += (s, e) =>
             {
+                if (string.IsNullOrWhiteSpace(Location.Product) || string.IsNullOrWhiteSpace(Location.Station)
+                    || MessageBox.Show($"Bạn có muốn xóa [{Location.Product}/{Location.Station}] không?", "Cảnh báo", MessageBoxButtons.YesNo) != DialogResult.Yes
+                    || !PasswordLocker.CheckPassword())
+                {
+                    return;
+                }
                 Task.Run(async () =>
                 {
                     if (await _locatonCreater.DeleteStation(Location))
@@ -152,6 +164,12 @@ namespace Upload.Service
 
             this.formMain.BtDeleteProgram.Click += (s, e) =>
             {
+                if (string.IsNullOrWhiteSpace(Location.Product) || string.IsNullOrWhiteSpace(Location.Station) || string.IsNullOrWhiteSpace(Location.AppName)
+                    || MessageBox.Show($"Bạn có muốn xóa [{Location.Product}/{Location.Station}/{Location.AppName}] không?", "Cảnh báo", MessageBoxButtons.YesNo) != DialogResult.Yes
+                    || !PasswordLocker.CheckPassword())
+                {
+                    return;
+                }
                 Task.Run(async () =>
                 {
                     if (await _locatonCreater.DeleteProgram(Location))
@@ -221,7 +239,10 @@ namespace Upload.Service
                 {
                     ShowVerionAction?.Invoke(_appList.ProgramPaths[appName]);
                 }
-                ShowVerionAction?.Invoke(null);
+                else
+                {
+                    ShowVerionAction?.Invoke(null);
+                }
             }
             finally
             {
@@ -280,7 +301,7 @@ namespace Upload.Service
             {
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
-            
+
         }
 
     }

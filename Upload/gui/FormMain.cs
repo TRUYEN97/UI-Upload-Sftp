@@ -18,7 +18,7 @@ namespace Upload
         private readonly LockActionCallBack _lockAccessUserViewCallBack = new LockActionCallBack();
         private readonly AccessUserControl _accessControl = new AccessUserControl();
         private readonly AccessUserListForm _stationAccessUserForm = new AccessUserListForm();
-        private bool _isLockPasswork = true;
+        private readonly PasswordLocker passwordLocker = new PasswordLocker();
         public FormMain()
         {
             InitializeComponent();
@@ -62,7 +62,7 @@ namespace Upload
             UpdateTxt(txtOpenCmd, appModel.OpenCmd);
             UpdateTxt(txtCloseCmd, appModel.CloseCmd);
             UpdateTxt(txtMainFile, appModel.MainPath);
-            UpdateTxt(txtVersion, appModel.WindowTitle);
+            UpdateTxt(txtVersion, appModel.Version);
             UpdateTxt(txtBOMVersion, appModel.BOMVersion);
             UpdateTxt(txtFCDVersion, appModel.FCDVersion);
             UpdateTxt(txtFTUVersion, appModel.FTUVersion);
@@ -90,25 +90,13 @@ namespace Upload
 
         private void btSetting_Click(object sender, EventArgs e)
         {
-            if (!_isLockPasswork)
+            if (passwordLocker.CheckLock())
             {
                 SetLockFor(true, Reasons.LOCK_PASSWORD);
-                _isLockPasswork = true;
-                return;
-            }
-            string inputPw = InputForm.GetInputPassword("Mật khẩu");
-            string password = AutoDLConfig.ConfigModel.Password;
-            if (!string.IsNullOrWhiteSpace(inputPw) && Util.GetMD5HashFromString(inputPw).Equals(password))
-            {
-                SetLockFor(false, Reasons.LOCK_PASSWORD);
-                _isLockPasswork = false;
-                LoggerBox.Addlog("Mật khẩu đúng");
             }
             else
             {
-                SetLockFor(true, Reasons.LOCK_PASSWORD);
-                LoggerBox.Addlog("Mật khẩu không đúng!");
-                _isLockPasswork = true;
+                SetLockFor(false, Reasons.LOCK_PASSWORD);
             }
         }
         private void InitLockLocation()

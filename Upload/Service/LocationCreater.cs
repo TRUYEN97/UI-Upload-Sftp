@@ -20,6 +20,10 @@ namespace Upload
 
         internal async Task<bool> CreateProduct(Location location)
         {
+            if (string.IsNullOrWhiteSpace(location.Product))
+            {
+                return false;
+            }
             try
             {
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
@@ -53,6 +57,10 @@ namespace Upload
         }
         internal async Task<bool> DeleteProduct(Location location)
         {
+            if (string.IsNullOrWhiteSpace(location.Product))
+            {
+                return false;
+            }
             try
             {
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
@@ -89,6 +97,10 @@ namespace Upload
         }
         internal async Task<bool> CreateStation(Location location)
         {
+            if (string.IsNullOrWhiteSpace(location.Product) || string.IsNullOrWhiteSpace(location.Station))
+            {
+                return false;
+            }
             try
             {
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
@@ -142,8 +154,12 @@ namespace Upload
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(location.Product) || string.IsNullOrWhiteSpace(location.Station))
+                {
+                    return false;
+                }
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
-
+                Location loca = new Location(location);
                 using (var sftp = Util.GetSftpInstance())
                 {
                     if (!await sftp.Connect())
@@ -151,19 +167,24 @@ namespace Upload
                         Util.ShowMessager("Không thể kết nối!");
                         return false;
                     }
-                    string path = PathUtil.GetStationPath(location);
+                    string path = PathUtil.GetStationPath(loca);
                     if (!await sftp.Exists(path))
                     {
-                        Util.ShowMessager($"Trạm {location.Station} không tồn tại!");
+                        Util.ShowMessager($"Trạm {loca.Station} không tồn tại!");
                         return true;
                     }
-                    if (await sftp.DeleteFolder(path, true))
+                    var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
+                    AppList appList = responceRs.Item1;
+                    if (appList?.ProgramPaths == null || appList?.ProgramPaths.Count == 0)
                     {
-                        Util.ShowMessager($"Trạm {location.Station} đã xóa thành công!");
-                        return true;
+                        if (await sftp.DeleteFolder(path))
+                        {
+                            Util.ShowMessager($"Trạm {loca.Station} đã xóa thành công!");
+                            return true;
+                        }
                     }
                 }
-                Util.ShowMessager($"Trạm {location.Station} đã xóa thất bại!");
+                Util.ShowMessager($"Trạm {loca.Station} đã xóa thất bại!");
                 return false;
 
             }
@@ -268,7 +289,7 @@ namespace Upload
 
         internal async Task<bool> DeleteProgram(Location location)
         {
-            if (string.IsNullOrWhiteSpace(location.AppName))
+            if (string.IsNullOrWhiteSpace(location.Product) || string.IsNullOrWhiteSpace(location.Station) || string.IsNullOrWhiteSpace(location.AppName))
             {
                 return false;
             }
@@ -283,7 +304,6 @@ namespace Upload
                         Util.ShowMessager("Không thể kết nối!");
                         return false;
                     }
-                    string appListPath = PathUtil.GetAppModelPath(loca);
                     var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
                     AppList appList = responceRs.Item1;
                     if (appList?.ProgramPaths != null)
@@ -299,7 +319,7 @@ namespace Upload
                             }
                             await sftp.DeleteFile(modelPath.AccectUserPath);
                             appList.ProgramPaths.Remove(loca.AppName);
-                            if(!await TranferUtil.UploadModel(appList, responceRs.Item2, zipPassword))
+                            if (!await TranferUtil.UploadModel(appList, responceRs.Item2, zipPassword))
                             {
                                 Util.ShowMessager($"{location.AppName} xóa thất bại!");
                                 return false;

@@ -21,15 +21,17 @@ namespace Upload.Service
         private readonly AccessUserControl _accessControl;
         private AppShowerModel showerModel;
         private readonly string zipPassword;
+        private readonly CheckConditon checkConditon;
         internal Uploader(FormMain formMain, LocationManagement locationManagement, AccessUserControl accessControl)
         {
             this._formMain = formMain;
             this.zipPassword = ConstKey.ZIP_PASSWORD;
             this._treeVersion = new MyTreeFolder(formMain.TreeVersion, zipPassword);
+            this.checkConditon = new CheckConditon(formMain);
             this._accessControl = accessControl;
             locationManagement.ShowVerionAction += (v) =>
             {
-                ResetTree();
+                ResetData();
                 if (v == null)
                 {
                     return;
@@ -43,6 +45,18 @@ namespace Upload.Service
             {
                 _= UpLoad(locationManagement);
             };
+            InitCheckCondition();
+        }
+
+        private void InitCheckCondition()
+        {
+            this.checkConditon.AddElems("BOM version", _formMain.TxtBOMVersion);
+            this.checkConditon.AddElems("FCD version", _formMain.TxtFCDVersion);
+            this.checkConditon.AddElems("FTU version", _formMain.TxtFTUVersion);
+            this.checkConditon.AddElems("FW version", _formMain.TxtFWVersion);
+            this.checkConditon.AddElems("Open command", _formMain.TxtOpenCmd);
+            this.checkConditon.AddElems("Main file", _formMain.TxtMainFile);
+            this.checkConditon.AddElems("Version", _formMain.TxtVersion);
         }
 
         private async Task UpLoad(LocationManagement locationManagement)
@@ -51,6 +65,10 @@ namespace Upload.Service
             {
                 SetLockFor(true, Reasons.LOCK_UPDATE);
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
+                if (this._accessControl.HasChanged)
+                {
+                    this._accessControl.UpdateData();
+                }
                 if (await UpdateAppModel())
                 {
                     try
@@ -91,8 +109,7 @@ namespace Upload.Service
         {
             if (programDataPath == null)
             {
-                ResetTree();
-                this._accessControl.Clear();
+                ResetData();
                 return;
             }
             _cts?.Cancel();
@@ -106,7 +123,7 @@ namespace Upload.Service
             AppModel appModel = await TranferUtil.GetModelConfig<AppModel>(programDataPath, zipPassword);
             if (appModel == null)
             {
-                ResetTree();
+                ResetProgramData();
                 SetLockFor(true, Reasons.LOCK_INPUT);
             }
             else
@@ -125,10 +142,15 @@ namespace Upload.Service
             }
         }
 
-        private void ResetTree()
+        private void ResetProgramData()
         {
             this._formMain.ClearData();
             this._treeVersion.Clear();
+        }
+        private void ResetData()
+        {
+            ResetProgramData();
+            _accessControl.Clear();
         }
 
         private HashSet<FileModel> FilterFileModelClass(ICollection<FileModel> fileModels)
@@ -153,20 +175,20 @@ namespace Upload.Service
 
         private async Task<bool> UpdateAppModel()
         {
-            if (showerModel == null)
+            if (showerModel == null )
             {
                 return false;
             }
             var appModel = showerModel.AppModel;
             var path = appModel.RemoteStoreDir;
-            if (appModel == null || path == null)
+            if (appModel == null || path == null || !checkConditon.IsOk())
             {
                 return false;
             }
             appModel.OpenCmd = _formMain.TxtOpenCmd.Text;
             appModel.CloseCmd = _formMain.TxtCloseCmd.Text;
             appModel.MainPath = _formMain.TxtMainFile.Text;
-            appModel.WindowTitle = _formMain.TxtWindowName.Text;
+            appModel.Version = _formMain.TxtVersion.Text;
             appModel.BOMVersion = _formMain.TxtBOMVersion.Text;
             appModel.FCDVersion = _formMain.TxtFCDVersion.Text;
             appModel.FTUVersion = _formMain.TxtFTUVersion.Text;
@@ -182,6 +204,44 @@ namespace Upload.Service
             appModel.FileModels = new HashSet<FileModel>(appFileModel);
             showerModel.RemoveFileModel.AddRange(this._treeVersion.RemoveFileModel);
             return true;
+        }
+
+        private class CheckConditon
+        {
+            private readonly Dictionary<string, TextBox> textBoxs = new Dictionary<string, TextBox>();
+            private readonly Form _own;
+            public CheckConditon(Form own)
+            {
+                _own = own;
+            }
+            public void AddElems(string name, TextBox textBox)
+            {
+                if(!textBoxs.ContainsKey(name)){
+                    textBoxs.Add(name, textBox);
+                }
+            }
+
+            public void RemoveElems(string name)
+            {
+                textBoxs.Remove(name);
+            }
+
+            public bool IsOk()
+            {
+                bool ok = true;
+                foreach(var textBoxElem in textBoxs)
+                {
+                    if (string.IsNullOrEmpty(textBoxElem.Value.Text))
+                    {
+                        Util.SafeInvoke(_own, () =>
+                        {
+                            MessageBox.Show(_own,$"{textBoxElem.Key} không được để rỗng!");
+                        });
+                        ok = false;
+                    }
+                }
+                return ok;
+            }
         }
     }
 }

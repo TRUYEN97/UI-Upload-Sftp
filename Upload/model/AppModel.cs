@@ -14,7 +14,7 @@ namespace AutoDownload.Model
         public string OpenCmd { get; set; }
         public string CloseCmd { get; set; }
         public string MainPath { get; set; }
-        public string WindowTitle { get; set; }
+        public string Version { get; set; }
         public string FWSersion { get; set; }
         public string FCDVersion { get; set; }
         public string BOMVersion { get; set; }

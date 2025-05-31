@@ -71,11 +71,22 @@ namespace Upload.gui
 
         private void btUserUpdate_Click(object sender, EventArgs e)
         {
+            if (HasChanged)
+            {
+                UpdateData();
+            }
+        }
+
+        public bool HasChanged => _userListViewModelView.HasChanged;
+
+        internal void UpdateData()
+        {
             if (string.IsNullOrEmpty(remotePath))
             {
                 return;
             }
-            Task.Run(async () => {
+            Task.Run(async () =>
+            {
                 try
                 {
                     ForceLockAll(Reasons.LOCK_ACCESS_USER_UPDATE);
@@ -87,6 +98,7 @@ namespace Upload.gui
                     else
                     {
                         LoggerBox.Addlog("Upload Access user list");
+                        _userListViewModelView.HasChanged = false;
                     }
                 }
                 finally

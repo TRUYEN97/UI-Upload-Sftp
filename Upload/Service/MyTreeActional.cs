@@ -10,7 +10,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using AutoDownload.Gui;
 using System.Threading;
-using Newtonsoft.Json.Linq;
 using static Upload.Service.LockManager;
 using Upload.Config;
 

@@ -12,6 +12,7 @@ namespace Upload.ModelView
     {
         private readonly ListBox _listView;
         public AccessUserListModel AccessUserListModel { get; private set; }
+        public bool HasChanged { get; set; }
         public UserListViewModelView(ListBox listView, Button btAdd, Button btDelete)
         {
             _listView = listView;
@@ -29,7 +30,10 @@ namespace Upload.ModelView
                 var user = UserForm.CreateUserModel();
                 if (user != null)
                 {
-                    AddUser(user);
+                    if (AddUser(user))
+                    {
+                        HasChanged |= true;
+                    }
                 }
             };
             btDelete.Click += (s, e) =>
@@ -49,20 +53,25 @@ namespace Upload.ModelView
                 }
                 foreach (var user in toRemoves)
                 {
-                    RemoveUser(user);
+                    if (RemoveUser(user))
+                    {
+                        HasChanged |= true;
+                    }
                 }
             };
         }
-        private void AddUser(UserModel user)
+        private bool AddUser(UserModel user)
         {
-            if(user == null) return;
-            if (AccessUserListModel?.UserModels == null) return;
+            if(user == null) return false;
+            if (AccessUserListModel?.UserModels == null) return false;
             var userModels = AccessUserListModel.UserModels;
             if (!userModels.Contains(user) || new ConfirmOverrideForm().IsAccept($"[{user.Id}] đã tồn tại!\r\nBạn có muốn thay thế không?"))
             {
                 userModels.Add(user);
                 Reload();
+                return true;
             }
+            return false;
         }
 
         private void Reload()
@@ -79,15 +88,16 @@ namespace Upload.ModelView
             });
         }
 
-        private void RemoveUser(UserModel user)
+        private bool RemoveUser(UserModel user)
         {
-            if (user == null) return;
+            if (user == null) return false;
             if (AccessUserListModel?.UserModels == null || _listView == null)
             {
-                return;
+                return false;
             }
             AccessUserListModel.UserModels.Remove(user);
             Reload();
+            return true;
         }
 
         public void SetUsers(AccessUserListModel accessUserList)
@@ -102,6 +112,7 @@ namespace Upload.ModelView
             }
             AccessUserListModel = accessUserList;
             Reload();
+            HasChanged = false;
         }
 
         public void Clear()
@@ -111,7 +122,7 @@ namespace Upload.ModelView
                 _listView.Items.Clear();
             });
             AccessUserListModel?.UserModels?.Clear();
+            HasChanged = false;
         }
-
     }
 }
