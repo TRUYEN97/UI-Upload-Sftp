@@ -165,7 +165,7 @@
     <Compile Include="Service\MyTreeActional.cs" />
     <Compile Include="ModelView\MyTreeFolder.cs" />
     <Compile Include="Service\SftpFileAction.cs" />
-    <Compile Include="Common\TranforUtil.cs" />
+    <Compile Include="Common\TranferUtil.cs" />
     <Compile Include="Common\PathUtil.cs" />
     <Compile Include="Common\PcInfo.cs" />
     <Compile Include="Common\Location.cs" />

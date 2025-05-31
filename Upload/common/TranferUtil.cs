@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoDownload.Gui;
@@ -11,7 +12,7 @@ using Upload.Model;
 
 namespace Upload.Common
 {
-    internal class TranforUtil
+    internal class TranferUtil
     {
 
         public static async Task<StoreFileModel> Download(FileModel fileModel, string localDir, string zipPassword)
@@ -37,7 +38,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager(Util.Status.CONNECT_ERR, "");
+                        Util.ShowMessager("Không thể kết nối!");
                         return null;
                     }
                     string remotePath = fileModel.RemotePath;
@@ -80,7 +81,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager(Util.Status.CONNECT_ERR, "");
+                        Util.ShowMessager("Không thể kết nối!");
                         return false;
                     }
                     if (await sftp.UploadZipFileFormModel(model, path, zipPassword))
@@ -105,7 +106,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager(Util.Status.CONNECT_ERR, "");
+                        Util.ShowMessager("Không thể kết nối!");
                         return;
                     }
                     foreach (var fileModel in removeFileModel)
@@ -147,7 +148,7 @@ namespace Upload.Common
                         {
                             if (!await sftp.Connect())
                             {
-                                Util.ShowMessager(Util.Status.CONNECT_ERR, "");
+                                Util.ShowMessager("Không thể kết nối!");
                                 return false;
                             }
                             int count = 0;
@@ -204,13 +205,12 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager(Util.Status.CONNECT_ERR, path);
+                        Util.ShowMessager("Không thể kết nối!");
                         return default;
                     }
 
                     if (!await sftp.Exists(path))
                     {
-                        Util.ShowMessager(Util.Status.LOCATION_ERR, path);
                         return default;
                     }
 
@@ -222,8 +222,7 @@ namespace Upload.Common
                     }
                     catch (Exception ex)
                     {
-                        string errorStr = $"File appConfig.json tại: {path} có thể bị lỗi format.\r\nHãy kiểm tra thủ công để tránh mất dữ liệu!";
-                        LoggerBox.Addlog($"{ex.Message}: {errorStr}");
+                        LoggerBox.Addlog(ex.Message);
                         return default;
                     }
                 }
@@ -233,6 +232,34 @@ namespace Upload.Common
             {
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
+        }
+        internal static async Task<List<FileModel>> GetCanDeleteFileModelsAsync(string thisAppPath, List<FileModel> fileModels, AppList appList, string zipPassword)
+        {
+            Dictionary<string, HashSet<FileModel>> canDeleteFileGroups = fileModels.GroupBy(f => f.Md5).ToDictionary(g => g.Key, g => new HashSet<FileModel>(g.Select(f => f)));
+            var fileModelUsed = new Dictionary<string, FileModel>();
+            AppModel appModel = null;
+            foreach (var appInfo in appList.ProgramPaths)
+            {
+                appModel = await GetModelConfig<AppModel>(appInfo.Value.AppPath, zipPassword);
+                Dictionary<string, HashSet<FileModel>> md5FileGroups = appModel?.FileModels?.GroupBy(f => f.Md5).ToDictionary(g => g.Key, g => new HashSet<FileModel>(g.Select(f => f)));
+                canDeleteFileGroups = canDeleteFileGroups.Where(f =>
+                {
+                    if (!md5FileGroups.ContainsKey(f.Key))
+                    {
+                        return true;
+                    }
+                    if (thisAppPath == appInfo.Value.AppPath)
+                    {
+                        if (md5FileGroups.TryGetValue(f.Key, out HashSet<FileModel> filePaths) && filePaths.SetEquals(f.Value))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }).ToDictionary(f=>f.Key, f => f.Value);
+                if (canDeleteFileGroups.Count == 0) break;
+            }
+            return canDeleteFileGroups.Values.SelectMany(set => set).Distinct().ToList();
         }
 
     }

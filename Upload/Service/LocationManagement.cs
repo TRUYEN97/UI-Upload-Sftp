@@ -58,7 +58,7 @@ namespace Upload.Service
                 string path = PathUtil.GetRemotePath();
                 if (!await UpdateItems(path, cbbProduct))
                 {
-                    Util.ShowMessager(Util.Status.ERROR, "Chưa cài trạm");
+                    Util.ShowMessager("Chưa cài trạm");
                 }
             }
             finally
@@ -134,7 +134,7 @@ namespace Upload.Service
                 });
             };
 
-            this.formMain.BtCreateVersion.Click += (s, e) =>
+            this.formMain.BtCreateProgram.Click += (s, e) =>
             {
                 string name = InputForm.GetInputString("Tên chương trình");
                 Task.Run(async () =>
@@ -143,7 +143,7 @@ namespace Upload.Service
                     {
                         return;
                     }
-                    if (await _locatonCreater.CreateApp(new Location() { Product = Location.Product, Station = Location.Station, AppName = name }))
+                    if (await _locatonCreater.CreateProgram(new Location() { Product = Location.Product, Station = Location.Station, AppName = name }))
                     {
                         await UpdateProgramListItems();
                     }
@@ -156,7 +156,7 @@ namespace Upload.Service
                 {
                     if (await _locatonCreater.DeleteProgram(Location))
                     {
-                        await UpdateStationItems();
+                        await UpdateProgramListItems();
                     }
                 });
             };
@@ -193,7 +193,7 @@ namespace Upload.Service
             try
             {
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
-                _appList = (await TranforUtil.GetAppListModel(Location, zipPassword)).Item1;
+                _appList = (await TranferUtil.GetAppListModel(Location, zipPassword)).Item1;
                 List<string> list = new List<string>();
                 if (_appList != null)
                 {
@@ -238,12 +238,11 @@ namespace Upload.Service
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager(Util.Status.CONNECT_ERR, remotePath);
+                        Util.ShowMessager("Không thể kết nối!");
                         return false;
                     }
                     if (!await sftp.Exists(remotePath))
                     {
-                        Util.ShowMessager(Util.Status.LOCATION_ERR, remotePath);
                         return false;
                     }
                     List<string> list = await sftp.ListDirectoryName(remotePath);

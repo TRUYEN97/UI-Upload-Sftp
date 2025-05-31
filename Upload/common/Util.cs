@@ -104,47 +104,10 @@ namespace Upload.Common
                 _configModel.SftpConfig.User,
                 _configModel.SftpConfig.Password);
         }
-        public enum Status
-        {
-            VERSION_ERR, LOCATION_ERR, CONNECT_ERR, CONFIG_FAIL,
-            SUCCESS, DOWNLOAD_FAIL, WAITING,
-            DOWNDLOAD_SUCCESS, ERROR
-        }
+
         internal static void ShowMessager(string mess)
         {
             LoggerBox.Addlog(mess);
-        }
-
-        internal static void ShowMessager(Status st, string mess)
-        {
-            switch (st)
-            {
-                case Status.VERSION_ERR:
-                    LoggerBox.Addlog($"{mess}: Version không hợp lệ!");
-                    break;
-                case Status.LOCATION_ERR:
-                    LoggerBox.Addlog($"{mess}: Đường dẫn không tồn tại!");
-                    break;
-                case Status.CONNECT_ERR:
-                    LoggerBox.Addlog("Không thể kết nối đến server!");
-                    break;
-                case Status.DOWNDLOAD_SUCCESS:
-                    LoggerBox.Addlog($"Download {mess} OK!");
-                    break;
-                case Status.DOWNLOAD_FAIL:
-                    LoggerBox.Addlog($"Download {mess} Failed!");
-                    break;
-                case Status.WAITING:
-                    break;
-                case Status.CONFIG_FAIL:
-                    LoggerBox.Addlog($"Down load app config failed! {mess}");
-                    break;
-                case Status.ERROR:
-                    LoggerBox.Addlog($"Lỗi! {mess}");
-                    break;
-                default:
-                    break;
-            }
         }
 
         internal static void OpenFile(string storePath)

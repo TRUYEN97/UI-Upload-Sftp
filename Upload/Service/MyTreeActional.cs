@@ -173,7 +173,7 @@ namespace Upload.Service
                 else
                 {
                     Util.ShowMessager($"Download: {fileModel.ProgramPath}");
-                    await TranforUtil.Download(fileModel, fullPath, zipPassword);
+                    await TranferUtil.Download(fileModel, fullPath, zipPassword);
                 }
             });
         }

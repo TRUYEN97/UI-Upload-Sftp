@@ -316,7 +316,7 @@ namespace Upload
                 string json = JsonConvert.SerializeObject(model, Formatting.Indented);
                 using (var zipStream = new MemoryStream())
                 {
-                    await ZipHelper.JsonAsZipToStream( zipStream, json, Path.GetFileNameWithoutExtension(remotePath),  zipPassword);
+                    await ZipHelper.JsonAsZipToStream(zipStream, json, Path.GetFileNameWithoutExtension(remotePath), zipPassword);
                     int maxRetries = 3;
                     for (int attempt = 1; attempt <= maxRetries; attempt++)
                     {
@@ -351,16 +351,15 @@ namespace Upload
         public async Task<bool> UploadFile(string remotePath, string localPath)
         {
             int maxRetries = 3;
+            if (!File.Exists(localPath))
+            {
+                return false;
+            }
             for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
-
-                if (!File.Exists(localPath))
+                try
                 {
-                    return false;
-                }
-                return await Task.Run(async () =>
-                {
-                    try
+                    return await Task.Run(async () =>
                     {
                         if (!await Connect())
                         {
@@ -375,15 +374,12 @@ namespace Upload
                             _client.UploadFile(fileStreem, remotePath);
                         }
                         return true;
-                    }
-                    catch (Exception)
-                    {
-                        if (attempt == maxRetries)
-                            return false;
-                        await Task.Delay(10);
-                    }
-                    return false;
-                });
+                    });
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(10);
+                }
             }
             return false;
 

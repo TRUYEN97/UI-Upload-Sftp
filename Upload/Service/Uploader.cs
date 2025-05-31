@@ -17,7 +17,6 @@ namespace Upload.Service
     internal partial class Uploader
     {
         private readonly MyTreeFolder _treeVersion;
-        public event Action UpdatedAction;
         private readonly FormMain _formMain;
         private readonly AccessUserControl _accessControl;
         private AppShowerModel showerModel;
@@ -58,14 +57,15 @@ namespace Upload.Service
                     {
                         ////////////////////////////////
                         var appModel = showerModel.AppModel;
-                        if(await TranforUtil.UploadFile(appModel.FileModels, zipPassword))
+                        if(await TranferUtil.UploadFile(appModel.FileModels, zipPassword))
                         {
                             appModel.FileModels = FilterFileModelClass(appModel.FileModels);
                             //////////////////////////////
-                            if (await TranforUtil.UploadModel(appModel, appModel.Path, zipPassword))
+                            if (await TranferUtil.UploadModel(appModel, appModel.Path, zipPassword))
                             {
-                                List<FileModel> canDeletes = await GetCanDeleteFileModelsAsync(showerModel, appModel.RemoteAppListPath);
-                                await TranforUtil.RemoveRemoteFile(canDeletes);
+                                AppList appList = await TranferUtil.GetModelConfig<AppList>(appModel.RemoteAppListPath, zipPassword);
+                                List<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(appModel.Path, showerModel.RemoveFileModel, appList, zipPassword);
+                                await TranferUtil.RemoveRemoteFile(canDeletes);
                                 await locationManagement.UpdateProgramListItems();
                                 LoggerBox.Addlog("Hoàn thành cập nhập");
                                 return;
@@ -103,7 +103,7 @@ namespace Upload.Service
 
         private async Task Show(string programDataPath, CancellationTokenSource cts)
         {
-            AppModel appModel = await TranforUtil.GetModelConfig<AppModel>(programDataPath, zipPassword);
+            AppModel appModel = await TranferUtil.GetModelConfig<AppModel>(programDataPath, zipPassword);
             if (appModel == null)
             {
                 ResetTree();
@@ -129,22 +129,6 @@ namespace Upload.Service
         {
             this._formMain.ClearData();
             this._treeVersion.Clear();
-        }
-
-        private async Task<List<FileModel>> GetCanDeleteFileModelsAsync(AppShowerModel showerModel, string appConfigPath)
-        {
-            AppList appList = await TranforUtil.GetModelConfig<AppList>(appConfigPath, zipPassword);
-            List<FileModel> canDeleteFiles = new List<FileModel>( showerModel.RemoveFileModel);
-            var fileModelUsed = new Dictionary<string, FileModel>();
-            AppModel appModel = null;
-            foreach (var appInfo in appList.ProgramPaths)
-            {
-                appModel = await TranforUtil.GetModelConfig<AppModel>(appInfo.Value.AppPath, zipPassword);
-                var files = appModel?.FileModels?.GroupBy( f => f.Md5).ToDictionary(g => g.Key, g => new HashSet<string>( g.Select( f => f.ProgramPath)));
-                canDeleteFiles = canDeleteFiles.Where(f =>  !files.ContainsKey(f.Md5) ).ToList();
-                if (canDeleteFiles.Count == 0) break;
-            }
-            return canDeleteFiles;
         }
 
         private HashSet<FileModel> FilterFileModelClass(ICollection<FileModel> fileModels)

@@ -92,9 +92,13 @@ namespace Upload.ModelView
 
         public void SetUsers(AccessUserListModel accessUserList)
         {
-            if (accessUserList?.UserModels == null || _listView == null)
+            if (_listView == null)
             {
                 return;
+            }
+            if(accessUserList?.UserModels == null)
+            {
+                accessUserList = new AccessUserListModel();
             }
             AccessUserListModel = accessUserList;
             Reload();
@@ -102,7 +106,10 @@ namespace Upload.ModelView
 
         public void Clear()
         {
-            _listView?.Items.Clear();
+            Util.SafeInvoke(_listView, () =>
+            {
+                _listView.Items.Clear();
+            });
             AccessUserListModel?.UserModels?.Clear();
         }
 

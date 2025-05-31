@@ -15,7 +15,7 @@ namespace Upload.Service
             try
             {
                 string fullPath = Path.GetFullPath(localDir);
-                 var storeF = await TranforUtil.Download(fileModel, fullPath, ConstKey.ZIP_PASSWORD);
+                 var storeF = await TranferUtil.Download(fileModel, fullPath, ConstKey.ZIP_PASSWORD);
                 if (storeF != null)
                 {
                     Util.OpenFile(storeF.StorePath);

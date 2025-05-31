@@ -24,6 +24,7 @@ namespace Upload.gui
         internal void Clear()
         {
             _userListViewModelView.Clear();
+            this.remotePath = null;
         }
 
         internal void Lock()
@@ -52,15 +53,13 @@ namespace Upload.gui
                 try
                 {
                     ForceLockAll(Reasons.LOCK_ACCESS_USER_UPDATE);
-                    AccessUserListModel userModels = await TranforUtil.GetModelConfig<AccessUserListModel>(remotePath, zipPassword);
+                    AccessUserListModel userModels = await TranferUtil.GetModelConfig<AccessUserListModel>(remotePath, zipPassword);
                     if (userModels == null)
                     {
                         Clear();
+                        userModels = new AccessUserListModel();
                     }
-                    else
-                    {
-                        _userListViewModelView.SetUsers(userModels);
-                    }
+                    _userListViewModelView.SetUsers(userModels);
                 }
                 finally
                 {
@@ -81,7 +80,7 @@ namespace Upload.gui
                 {
                     ForceLockAll(Reasons.LOCK_ACCESS_USER_UPDATE);
                     AccessUserListModel userModels = _userListViewModelView.AccessUserListModel ?? new AccessUserListModel();
-                    if (!await TranforUtil.UploadModel(userModels, remotePath, zipPassword))
+                    if (!await TranferUtil.UploadModel(userModels, remotePath, zipPassword))
                     {
                         LoggerBox.Addlog("Upload Access user list failed!");
                     }

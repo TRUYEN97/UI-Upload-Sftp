@@ -7,7 +7,7 @@ namespace Upload.Config
     public class AutoDLConfig
     {
         private static readonly Lazy<AutoDLConfig> _instance = new Lazy<AutoDLConfig>(() => new AutoDLConfig());
-        private static readonly string cfPath = "./AutoDL_Conig.json";
+        private static readonly string cfPath = "./config.json";
         private ConfigModel _configModel;
         private AutoDLConfig() {
             if (!Init(cfPath))

@@ -694,7 +694,7 @@ namespace Upload
         public System.Windows.Forms.Button BtDeleteStation { get { return btDeleteStation; } }
         public System.Windows.Forms.Button BtCreateStation { get { return btCreateStation; } }
         public System.Windows.Forms.Button BtDeleteProgram { get { return btDeleteProgram; } }
-        public System.Windows.Forms.Button BtCreateVersion { get { return btCreateProgram; } }
+        public System.Windows.Forms.Button BtCreateProgram { get { return btCreateProgram; } }
         public System.Windows.Forms.Button BtUpdate { get { return btUpdate; } }
         public System.Windows.Forms.TreeView TreeVersion { get { return treeFolder; } }
         public System.Windows.Forms.CheckBox CbEnabled { get { return cbEnabled; } }

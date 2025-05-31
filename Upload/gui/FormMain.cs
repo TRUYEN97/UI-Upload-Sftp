@@ -92,7 +92,7 @@ namespace Upload
         {
             if (!_isLockPasswork)
             {
-                LockManager.SetLockFor(true, Reasons.LOCK_PASSWORD);
+                SetLockFor(true, Reasons.LOCK_PASSWORD);
                 _isLockPasswork = true;
                 return;
             }
@@ -100,13 +100,13 @@ namespace Upload
             string password = AutoDLConfig.ConfigModel.Password;
             if (!string.IsNullOrWhiteSpace(inputPw) && Util.GetMD5HashFromString(inputPw).Equals(password))
             {
-                LockManager.SetLockFor(false, Reasons.LOCK_PASSWORD);
+                SetLockFor(false, Reasons.LOCK_PASSWORD);
                 _isLockPasswork = false;
                 LoggerBox.Addlog("Mật khẩu đúng");
             }
             else
             {
-                LockManager.SetLockFor(true, Reasons.LOCK_PASSWORD);
+                SetLockFor(true, Reasons.LOCK_PASSWORD);
                 LoggerBox.Addlog("Mật khẩu không đúng!");
                 _isLockPasswork = true;
             }
@@ -237,6 +237,12 @@ namespace Upload
 
         private void btAccessUser_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_locationManagement.Location.Product) || string.IsNullOrEmpty(_locationManagement.Location.Station))
+            {
+                return;
+            }
+            string stationAccUserPath = PathUtil.GetStationAccessUserPath(_locationManagement.Location);
+            _stationAccessUserForm.LoadModel(stationAccUserPath);
             _stationAccessUserForm.ShowDialog();
         }
     }

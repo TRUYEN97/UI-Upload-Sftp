@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using static Upload.Service.LockManager;
 
 namespace Upload.gui
 {
@@ -11,5 +10,11 @@ namespace Upload.gui
             InitializeComponent();
             this.Controls.Add(this._accessControl);
         }
+
+        public void LoadModel(string removePath)
+        {
+            this._accessControl.LoadFormPath(removePath);
+        }
+
     }
 }
