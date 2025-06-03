@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Upload.Common;
-using Upload.Service;
+using Upload.Model;
 
 namespace Upload.gui
 {
@@ -21,15 +21,16 @@ namespace Upload.gui
             InitializeComponent();
             firstControl = txtId;
         }
-        internal static UserModel EditUserModel(UserModel userModel)
+        internal static bool EditUserModel(UserModel userModel)
         {
             var inputForm = new UserForm(userModel);
             if (inputForm.ShowDialog() == DialogResult.OK)
             {
                 userModel.Id = inputForm.Id;
                 userModel.Password = Util.GetMD5HashFromString(inputForm.Password); 
+                return true;
             }
-            return userModel;
+            return false;
         }
         internal static UserModel CreateUserModel()
         {

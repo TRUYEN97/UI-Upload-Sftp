@@ -5,9 +5,7 @@ using Upload.Service;
 using Upload.gui;
 using Upload.Common;
 using Upload.Model;
-using AutoDownload.Model;
 using Path = System.IO.Path;
-using Upload.Config;
 using static Upload.Service.LockManager;
 
 namespace Upload

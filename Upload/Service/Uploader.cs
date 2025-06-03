@@ -5,8 +5,6 @@ using System.Windows.Forms;
 using Upload.Model;
 using AutoDownload.Gui;
 using Upload.Common;
-using AutoDownload.Model;
-using System.Linq;
 using static Upload.Service.LockManager;
 using System.Threading;
 using Upload.ModelView;

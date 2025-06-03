@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoDownload.Gui;
-using AutoDownload.Model;
 using Newtonsoft.Json;
 using Upload.gui;
 using Upload.Model;

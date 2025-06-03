@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoDownload.Model;
-using Newtonsoft.Json;
 using Upload.Common;
 using Upload.gui;
 using Upload.Model;

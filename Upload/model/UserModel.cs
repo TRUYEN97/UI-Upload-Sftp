@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Upload.Service
+namespace Upload.Model
 {
     internal class UserModel
     {

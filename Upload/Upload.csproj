@@ -204,7 +204,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Uploader.cs" />
-    <Compile Include="Service\UserModel.cs" />
+    <Compile Include="Model\UserModel.cs" />
     <EmbeddedResource Include="gui\AccessUserControl.resx">
       <DependentUpon>AccessUserControl.cs</DependentUpon>
     </EmbeddedResource>

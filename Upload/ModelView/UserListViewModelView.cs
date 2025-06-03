@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Upload.Common;
 using Upload.gui;
 using Upload.Model;
-using Upload.Service;
 
 namespace Upload.ModelView
 {
@@ -22,7 +21,10 @@ namespace Upload.ModelView
                 var item = _listView.SelectedItem;
                 if (item is UserModel user)
                 {
-                    UserForm.EditUserModel(user);
+                    if (UserForm.EditUserModel(user))
+                    {
+                        HasChanged = true;
+                    }
                 }
             };
             btAdd.Click += (s, e) =>
@@ -32,7 +34,7 @@ namespace Upload.ModelView
                 {
                     if (AddUser(user))
                     {
-                        HasChanged |= true;
+                        HasChanged = true;
                     }
                 }
             };
@@ -55,7 +57,7 @@ namespace Upload.ModelView
                 {
                     if (RemoveUser(user))
                     {
-                        HasChanged |= true;
+                        HasChanged = true;
                     }
                 }
             };

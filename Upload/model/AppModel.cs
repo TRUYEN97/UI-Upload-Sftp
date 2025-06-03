@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Upload.Model;
-using Upload.Service;
+﻿using System.Collections.Generic;
 
-namespace AutoDownload.Model
+namespace Upload.Model
 {
     internal class AppModel
     {
