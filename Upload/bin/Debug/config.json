@@ -1,11 +1,11 @@
 {
   "TempDir": "./temp",
   "SftpConfig": {
-    "Host": "127.0.0.1",
+    "Host": "200.166.2.203",
     "Port": 4422,
-    "User": "user",
-    "Password": "ubnt"
+    "User": "oper",
+    "Password": "foxconn168!!"
   },
-  "RemotePath": "/AutoDownload-Store",
-  "Password": "e10adc3949ba59abbe56e057f20f883e"
+  "RemotePath": "/AutoDownload-DOWNGRADE",
+  "Password": "456fb2fe43af35dc1115a1069a0765b8"
 }

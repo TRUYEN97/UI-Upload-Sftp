@@ -22,6 +22,6 @@ namespace Upload.Config
         public SftpConfig SftpConfig { get;  set; }
 
         public string RemotePath { get;  set; }
-        public string Password { get; internal set; }
+        public string Password { get; set; }
     }
 }
