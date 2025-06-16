@@ -198,8 +198,7 @@ namespace Upload.Service
             appModel.CloseAndClear = _formMain.CbCloseAndClear.Checked;
             showerModel.RemoveFileModel.Clear();
             //////////////
-            List<FileModel> appFileModel = await this._treeVersion.GetAllLeafNodes();
-            appModel.FileModels = new HashSet<FileModel>(appFileModel);
+            appModel.FileModels = await this._treeVersion.GetAllLeafNodes();
             showerModel.RemoveFileModel.AddRange(this._treeVersion.RemoveFileModel);
             return true;
         }

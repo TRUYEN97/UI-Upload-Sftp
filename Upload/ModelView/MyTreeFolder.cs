@@ -32,7 +32,7 @@ namespace Upload.ModelView
         private List<TreeNode> selectedNodes = new List<TreeNode>();
         private bool _isEmpty;
 
-        public List<FileModel> RemoveFileModel { get => _myTreeActional.RemoveFileModel; }
+        public HashSet<FileModel> RemoveFileModel { get => _myTreeActional.RemoveFileModel; }
 
         public string RemoteDir { get { return _myTreeActional.RemoteDir; } set { _myTreeActional.RemoteDir = value; } }
 
@@ -101,7 +101,8 @@ namespace Upload.ModelView
                                         if (isFile)
                                         {
                                             report.Invoke(++count, fileModel.ProgramPath);
-                                            _myTreeActional.AddFileNode(nodes, foundNode, fileModel, checkUnique: false);
+                                            foundNode.Tag = fileModel;
+                                            _myTreeActional.AddFileNode(nodes, foundNode, checkUnique: false);
                                         }
                                         else
                                         {
@@ -143,18 +144,18 @@ namespace Upload.ModelView
             _cts?.Cancel();
         }
 
-        internal async Task<List<FileModel>> GetAllLeafNodes()
+        internal async Task<HashSet<FileModel>> GetAllLeafNodes()
         {
             return await _myTreeActional.GetAllLeafNodes(treeView.Nodes);
         }
 
         private void InitTreeFileContextMenu()
         {
-            _treeFileContextMenu.Items.Add("Mở", null, (s, e) =>
+            _treeFileContextMenu.Items.Add("Open", Properties.Resources.OpenFile, (s, e) =>
             {
                 Open();
             });
-            _treeFileContextMenu.Items.Add("Làm file khởi động", null, (s, e) =>
+            _treeFileContextMenu.Items.Add("Set open file", Properties.Resources.LaunchApp, (s, e) =>
             {
                 TreeNode node = treeView.SelectedNode;
                 if (node?.Tag is FileModel fileModel)
@@ -162,7 +163,7 @@ namespace Upload.ModelView
                     OnChosseRunFile?.Invoke(fileModel);
                 }
             });
-            _treeFileContextMenu.Items.Add("Làm file đóng", null, (s, e) =>
+            _treeFileContextMenu.Items.Add("Set close file", Properties.Resources.Close, (s, e) =>
             {
                 TreeNode node = treeView.SelectedNode;
                 if (node?.Tag is FileModel fileModel)
@@ -170,7 +171,7 @@ namespace Upload.ModelView
                     OnChosseCloseFile?.Invoke(fileModel);
                 }
             });
-            _treeFileContextMenu.Items.Add("lấy icon", null, (s, e) =>
+            _treeFileContextMenu.Items.Add("Get icon of file", Properties.Resources.AddAsIcon, (s, e) =>
             {
                 TreeNode node = treeView.SelectedNode;
                 if (node?.Tag is FileModel fileModel)
@@ -178,49 +179,68 @@ namespace Upload.ModelView
                     OnChosseMainFile?.Invoke(fileModel);
                 }
             });
-            _treeFileContextMenu.Items.Add("Download", null, async (s, e) =>
+            _treeFileContextMenu.Items.Add("Download", Properties.Resources.DownloadIcon, async (s, e) =>
             {
                 await Download();
             });
-            _treeFileContextMenu.Items.Add("Rename", null, (s, e) =>
+            _treeFileContextMenu.Items.Add("Update", Properties.Resources.Update, async (s, e) =>
+            {
+                Update();
+            });
+            _treeFileContextMenu.Items.Add("Rename", Properties.Resources.Rename, (s, e) =>
             {
                 Rename();
             });
-            _treeFileContextMenu.Items.Add("Xóa", null, async (s, e) =>
+            _treeFileContextMenu.Items.Add("Delete", Properties.Resources.Delete, async (s, e) =>
             {
                 await Delete();
             });
         }
 
+        private void Update()
+        {
+            TreeNode node = _myTreeActional.GetNodeSelected();
+            if (node == null) return;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Multiselect = false;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    string fileName = ofd.FileName;
+                    _myTreeActional.UpdateFile(node, fileName);
+                }
+            }
+        }
+
         private void InitTreeFolderContextMenu()
         {
-            _treeFolderContextMenu.Items.Add("Download", null, async (s, e) =>
+            _treeFolderContextMenu.Items.Add("Download", Properties.Resources.DownloadIcon, async (s, e) =>
             {
                 await Download();
             });
 
-            _treeFolderContextMenu.Items.Add("Tạo thư mục", null, (s, e) =>
+            _treeFolderContextMenu.Items.Add("Create new folder", Properties.Resources.NewFolder, (s, e) =>
             {
                 CreateFolder();
 
             });
 
-            _treeFolderContextMenu.Items.Add("Rename", null, (s, e) =>
+            _treeFolderContextMenu.Items.Add("Rename", Properties.Resources.Rename, (s, e) =>
             {
                 Rename();
             });
 
-            _treeFolderContextMenu.Items.Add("Thêm file", null, async (s, e) =>
+            _treeFolderContextMenu.Items.Add("Add files", Properties.Resources.AddFile, async (s, e) =>
             {
                 await AddFiles();
             });
 
-            _treeFolderContextMenu.Items.Add("Thêm folder", null, async (s, e) =>
+            _treeFolderContextMenu.Items.Add("Add folder", Properties.Resources.AddFromFolder, async (s, e) =>
             {
                 await AddFolder();
             });
 
-            _treeFolderContextMenu.Items.Add("Xóa", null, async (s, e) =>
+            _treeFolderContextMenu.Items.Add("Delete", Properties.Resources.Delete, async (s, e) =>
             {
                 await Delete();
             });
@@ -229,22 +249,22 @@ namespace Upload.ModelView
         private void InitTreeContextMenu()
         {
 
-            _treeContextMenu.Items.Add("Download", null, async (s, e) =>
+            _treeContextMenu.Items.Add("Download", Properties.Resources.DownloadIcon, async (s, e) =>
             {
                 await DownloadAll();
             });
 
-            _treeContextMenu.Items.Add("Tạo thư mục", null, (s, e) =>
+            _treeContextMenu.Items.Add("Create new folder", Properties.Resources.NewFolder, (s, e) =>
             {
                 CreateFolder();
             });
 
-            _treeContextMenu.Items.Add("Thêm file", null, async (s, e) =>
+            _treeContextMenu.Items.Add("Add files", Properties.Resources.AddFile, async (s, e) =>
             {
                 await AddFiles();
             });
 
-            _treeContextMenu.Items.Add("Thêm folder", null, async (s, e) =>
+            _treeContextMenu.Items.Add("Add folder", Properties.Resources.AddFromFolder, async (s, e) =>
             {
                 await AddFolder();
             });
@@ -283,7 +303,7 @@ namespace Upload.ModelView
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     string folderPath = fbd.SelectedPath;
-                    List<FileModel> fileModels = await GetAllLeafNodes();
+                    HashSet<FileModel> fileModels = await GetAllLeafNodes();
                     if (fileModels == null || fileModels.Count == 0) return;
                     await _myTreeActional.Download(folderPath, fileModels, zipPassword);
                 }
@@ -299,7 +319,7 @@ namespace Upload.ModelView
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     string folderPath = fbd.SelectedPath;
-                    List<FileModel> fileModels = await _myTreeActional.GetFileModels(selectedNode);
+                    HashSet<FileModel> fileModels = await _myTreeActional.GetFileModels(selectedNode);
                     if (fileModels == null || fileModels.Count == 0) return;
                     await _myTreeActional.Download(folderPath, fileModels, zipPassword);
                 }
@@ -320,8 +340,8 @@ namespace Upload.ModelView
         {
             TreeNode selectedNode = treeView.SelectedNode;
             if (selectedNode == null) return;
-            if (MessageBox.Show($"Bạn có chắc chắn muốn xóa '{selectedNode.Text}'?",
-                "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show($"Do you want to delete the [{selectedNode.Text}]?",
+                "Ok", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 await _myTreeActional.Delete(selectedNode);
             }
@@ -333,7 +353,7 @@ namespace Upload.ModelView
             if (nodes == null) return;
             var dialog = new VistaFolderBrowserDialog()
             {
-                Description = "Chọn thư mục",
+                Description = "Select folder",
                 UseDescriptionForTitle = true,
                 Multiselect = true
             };
@@ -374,12 +394,12 @@ namespace Upload.ModelView
         {
             TreeNodeCollection nodes = _myTreeActional.GetNodeCollection();
             if (nodes == null) return;
-            string folderName = InputForm.GetInputString("Tên folder");
+            string folderName = InputForm.GetInputString("Folder name");
             if (folderName == null) return;
             var oldNode = _myTreeActional.FindFolder(nodes, folderName) ?? _myTreeActional.FindFile(nodes, folderName);
             if (oldNode != null)
             {
-                LoggerBox.Addlog($"Tên:{folderName} trùng với đường dẫn là {oldNode.FullPath}");
+                LoggerBox.Addlog($"name:[{folderName}] matches the path name is: [{oldNode.FullPath}]");
             }
             else
             {

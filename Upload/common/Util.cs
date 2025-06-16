@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
@@ -134,6 +136,40 @@ namespace Upload.Common
         internal static void SetCursor(Form form, Cursor cursor)
         {
             Util.SafeInvoke(form, () => { form.Cursor = cursor; });
+        }
+
+
+
+        [DllImport("Shell32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi,
+        uint cbFileInfo, uint uFlags);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        }
+
+        const uint SHGFI_ICON = 0x000000100;
+        const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
+        const uint FILE_ATTRIBUTE_NORMAL = 0x80;
+
+        internal static Icon GetIconForExtension(string fileNameOrExt)
+        {
+            SHFILEINFO shinfo = new SHFILEINFO();
+
+            SHGetFileInfo(fileNameOrExt, FILE_ATTRIBUTE_NORMAL, ref shinfo,
+                (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
+
+            return Icon.FromHandle(shinfo.hIcon);
         }
     }
 }

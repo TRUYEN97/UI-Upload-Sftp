@@ -34,7 +34,7 @@ namespace Upload.Service
         private readonly TreeView _treeView;
         private readonly ImageList _imageList;
 
-        public List<FileModel> RemoveFileModel { get; }
+        public HashSet<FileModel> RemoveFileModel { get; }
 
         public string RemoteDir { get; set; }
         public MyTreeActional(TreeView treeView)
@@ -43,7 +43,7 @@ namespace Upload.Service
             this._treeView.BackColor = TREE_BACK_COLOR;
             this._treeView.LineColor = TREE_LINE_COLOR;
             _imageList = new ImageList();
-            RemoveFileModel = new List<FileModel>();
+            RemoveFileModel = new HashSet<FileModel>();
             _treeView.ImageList = _imageList;
             if (!_imageList.Images.ContainsKey(FOLDER_KEY))
             {
@@ -102,7 +102,7 @@ namespace Upload.Service
             }
         }
 
-        internal async Task Download(string folderPath, List<FileModel> fileModels, string zipPassword)
+        internal async Task Download(string folderPath, HashSet<FileModel> fileModels, string zipPassword)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace Upload.Service
             }
         }
 
-        internal async Task<List<FileModel>> GetFileModels(TreeNode selectedNode)
+        internal async Task<HashSet<FileModel>> GetFileModels(TreeNode selectedNode)
         {
             if (selectedNode?.Nodes?.Count > 0)
             {
@@ -145,7 +145,7 @@ namespace Upload.Service
             }
             else
             {
-                var list = new List<FileModel>();
+                var list = new HashSet<FileModel>();
                 if (selectedNode?.Tag is FileModel fileModel)
                 {
                     list.Add(fileModel);
@@ -241,21 +241,30 @@ namespace Upload.Service
 
         private void AddNewMode(TreeNodeCollection nodes, string filePath, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
         {
+            TreeNode node = CreateNewNode(filePath);
+            AddFileNode(nodes, node, confirmOverrideFile, checkUnique);
+        }
+
+        private TreeNode CreateNewNode(string filePath)
+        {
             string fileName = Path.GetFileName(filePath);
-            TreeNode node = new TreeNode(fileName);
-            StoreFileModel fileModel = new StoreFileModel();
-            AddFileNode(nodes, node, fileModel, confirmOverrideFile, checkUnique);
-            fileModel.StorePath = filePath;
-            fileModel.RemoteDir = RemoteDir;
-            string fullPath = node.Parent?.FullPath;
+            TreeNode newNode = new TreeNode(fileName);
+            FileModel newfileModel = new StoreFileModel()
+            {
+                StorePath = filePath,
+                RemoteDir = RemoteDir
+            };
+            string fullPath = newNode.Parent?.FullPath;
             if (string.IsNullOrWhiteSpace(fullPath))
             {
-                fileModel.ProgramPath = fileName;
+                newfileModel.ProgramPath = fileName;
             }
             else
             {
-                fileModel.ProgramPath = Path.Combine(fullPath, fileName);
+                newfileModel.ProgramPath = Path.Combine(fullPath, fileName);
             }
+            newNode.Tag = newfileModel;
+            return newNode;
         }
 
         internal TreeNode AddNewFolderNode(TreeNodeCollection nodes, TreeNode newNode, bool checkUnique)
@@ -283,40 +292,43 @@ namespace Upload.Service
         {
             using (ProgressDialogForm form = new ProgressDialogForm("Delete Files"))
             {
-                List<FileModel> nodes = await GetFileModels(selectedNode);
+                HashSet<FileModel> nodes = await GetFileModels(selectedNode);
                 if (nodes.Count > 0)
                 {
                     form.Maximum = nodes.Count;
-                    List<FileModel> toRemove = await form.DoworkAsync(async (report, token) =>
+                    HashSet<FileModel> toRemove = await form.DoworkAsync(async (report, token) =>
                     {
                         return await GetRemoveFileModels(report, nodes, token);
                     });
                     if (toRemove?.Count > 0)
                     {
-                        RemoveFileModel.AddRange(toRemove);
+                        foreach (var FileModelItem in toRemove)
+                        {
+                            RemoveFileModel.Add(FileModelItem);
+                        }
                     }
                     Util.SafeInvoke(_treeView, () =>
                     {
                         selectedNode.Remove();
                     });
-                    Util.ShowMessager($"Đã bỏ [{selectedNode.Text}] ra khỏi danh sách");
+                    Util.ShowMessager($"Delete [{selectedNode.Text}]");
                 }
             }
         }
 
-        private static async Task<List<FileModel>> GetRemoveFileModels(Action<int, string> report, List<FileModel> nodes, CancellationToken token)
+        private static async Task<HashSet<FileModel>> GetRemoveFileModels(Action<int, string> report, HashSet<FileModel> nodes, CancellationToken token)
         {
             return await Task.Run(() =>
             {
                 int count = 0;
-                List<FileModel> rm = new List<FileModel>();
+                HashSet<FileModel> rm = new HashSet<FileModel>();
                 foreach (FileModel filemodel in nodes)
                 {
                     if (!(filemodel is StoreFileModel))
                     {
                         report(++count, filemodel.ProgramPath);
                         rm.Add(filemodel);
-                        Util.ShowMessager($"Đã bỏ [{filemodel.ProgramPath}] ra khỏi danh sách");
+                        Util.ShowMessager($"delete [{filemodel.ProgramPath}]");
                     }
                     if (token.IsCancellationRequested)
                     {
@@ -328,7 +340,7 @@ namespace Upload.Service
             });
         }
 
-        internal void AddFileNode(TreeNodeCollection nodes, TreeNode fileNode, FileModel fileModel, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
+        internal void AddFileNode(TreeNodeCollection nodes, TreeNode fileNode, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
         {
             string text = fileNode.Text;
             string ext = Path.GetExtension(text).ToLower();
@@ -342,7 +354,7 @@ namespace Upload.Service
                 {
                     try
                     {
-                        Icon icon = GetIconForExtension(text);
+                        Icon icon = Util.GetIconForExtension(text);
                         _imageList.Images.Add(ext, icon);
                     }
                     catch
@@ -353,7 +365,6 @@ namespace Upload.Service
             }
             fileNode.ImageKey = ext;
             fileNode.SelectedImageKey = ext;
-            fileNode.Tag = fileModel;
             TreeNode oldNode = checkUnique ? FindFile(nodes, fileNode.Text) : null;
             Util.SafeInvoke(_treeView, () =>
             {
@@ -370,27 +381,47 @@ namespace Upload.Service
                     }
                     nodes.Add(fileNode);
                 }
-                else if (confirmOverrideFile == null || confirmOverrideFile.IsAccept($"\"{text}\" đã tồn tại!\r\nBạn muốn update file này không?"))
+                else if (confirmOverrideFile == null || confirmOverrideFile.IsAccept($"[{text}] has exists!\r\nDo you want to update this file?"))
                 {
-                    fileNode.ForeColor = FILE_UPDATE_COLOR;
-
-                    if (oldNode.TreeView != null && oldNode.Parent != null)
-                    {
-                        RemoveFileModel.Add((FileModel)oldNode.Tag);
-                        oldNode.Remove();
-                        oldNode = null;
-                    }
-                    else if (oldNode.TreeView != null && oldNode.Parent == null)
-                    {
-                        RemoveFileModel.Add((FileModel)oldNode.Tag);
-                        _treeView.Nodes.Remove(oldNode);
-                        oldNode = null;
-                    }
-
-                    nodes.Add(fileNode);
+                    UpdateFileModel(nodes, fileNode, oldNode);
                 }
             });
 
+        }
+
+        internal void UpdateFile(TreeNode fileNodeOld, string newFilePath)
+        {
+            TreeNodeCollection treeNodeCollection;
+            if (fileNodeOld?.Parent != null)
+            {
+                treeNodeCollection = fileNodeOld?.Parent.Nodes;
+            }
+            else
+            {
+                treeNodeCollection = _treeView.Nodes;
+            }
+            TreeNode newNode = CreateNewNode(newFilePath);
+            newNode.Text = fileNodeOld.Text;
+            if (newNode.Tag is StoreFileModel storeFileModel && fileNodeOld.Tag is StoreFileModel storeFileModelOld)
+            {
+                storeFileModel.ProgramPath = storeFileModelOld.ProgramPath;
+            }
+            UpdateFileModel(treeNodeCollection, newNode, fileNodeOld);
+        }
+
+        private TreeNode UpdateFileModel(TreeNodeCollection nodes, TreeNode fileNode, TreeNode oldNode)
+        {
+            fileNode.ForeColor = FILE_UPDATE_COLOR;
+            if (oldNode.TreeView != null)
+            {
+                if (!(oldNode.Tag is StoreFileModel) && oldNode.Tag is FileModel fileModel)
+                {
+                    RemoveFileModel.Add(fileModel);
+                }
+                oldNode.Remove();
+            }
+            nodes.Add(fileNode);
+            return fileNode;
         }
 
         internal void RenameNode(TreeNode rootNode, string newName)
@@ -407,11 +438,11 @@ namespace Upload.Service
                         var oldNode = FindFolder(parent.Nodes, newName) ?? FindFile(parent.Nodes, newName);
                         if (oldNode != null)
                         {
-                            LoggerBox.Addlog($"Tên:{newName} trùng với tên đường dẫn là {oldNode.FullPath}");
+                            LoggerBox.Addlog($"Name:[{newName}] matches the path name is: [{oldNode.FullPath}]");
                         }
                     }
 
-                    Util.ShowMessager($"Rename: {rootNode.Text} -> {newName}");
+                    Util.ShowMessager($"Rename: [{rootNode.Text}] -> [{newName}]");
                     Util.SafeInvoke(_treeView, () =>
                     {
                         rootNode.Text = newName;
@@ -444,7 +475,7 @@ namespace Upload.Service
                             }
                         }
                     }
-                    Util.ShowMessager($"Rename: {rootNode.Text} -> {newName} done");
+                    Util.ShowMessager($"Rename: [{rootNode.Text}] -> [{newName}] done");
                 }
                 finally
                 {
@@ -453,36 +484,34 @@ namespace Upload.Service
             });
         }
 
-        internal async Task<List<FileModel>> GetAllLeafNodes(TreeNodeCollection nodes)
+        internal async Task<HashSet<FileModel>> GetAllLeafNodes(TreeNodeCollection nodes)
         {
             try
             {
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
-                List<FileModel> leafNodes = new List<FileModel>();
+                HashSet<FileModel> leafNodes = new HashSet<FileModel>();
                 if (nodes == null) return leafNodes;
                 Stack<TreeNode> stack = new Stack<TreeNode>();
                 return await Task.Run(() =>
                 {
-                    // Đẩy tất cả node gốc vào stack
                     foreach (TreeNode node in nodes)
                     {
                         stack.Push(node);
                     }
 
-                    // Duyệt theo chiều sâu
                     while (stack.Count > 0)
                     {
                         TreeNode currentNode = stack.Pop();
 
                         if (currentNode.Nodes.Count == 0 && currentNode.Tag is FileModel fileModel)
                         {
-                            leafNodes.Add(fileModel); // Là node lá và có Tag là FileModel
+                            leafNodes.Add(fileModel);
                         }
                         else
                         {
                             foreach (TreeNode child in currentNode.Nodes)
                             {
-                                stack.Push(child); // Thêm các node con vào stack
+                                stack.Push(child);
                             }
                         }
                     }
@@ -522,6 +551,11 @@ namespace Upload.Service
             return oldNode;
         }
 
+        internal TreeNode GetNodeSelected()
+        {
+            return _treeView.SelectedNode;
+        }
+
         internal TreeNodeCollection GetNodeCollection()
         {
             TreeNodeCollection nodes;
@@ -549,38 +583,6 @@ namespace Upload.Service
             string normalizedPath = fileModel.ProgramPath.Replace('/', Path.DirectorySeparatorChar)
                                     .Replace('\\', Path.DirectorySeparatorChar);
             return normalizedPath.Split(Path.DirectorySeparatorChar);
-        }
-
-        [DllImport("Shell32.dll", CharSet = CharSet.Auto)]
-        static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi,
-        uint cbFileInfo, uint uFlags);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SHFILEINFO
-        {
-            public IntPtr hIcon;
-            public int iIcon;
-            public uint dwAttributes;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-            public string szDisplayName;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
-            public string szTypeName;
-        }
-
-        const uint SHGFI_ICON = 0x000000100;
-        const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
-        const uint FILE_ATTRIBUTE_NORMAL = 0x80;
-
-        internal Icon GetIconForExtension(string fileNameOrExt)
-        {
-            SHFILEINFO shinfo = new SHFILEINFO();
-
-            SHGetFileInfo(fileNameOrExt, FILE_ATTRIBUTE_NORMAL, ref shinfo,
-                (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
-
-            return Icon.FromHandle(shinfo.hIcon);
         }
     }
 

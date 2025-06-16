@@ -37,13 +37,13 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowMessager("connect to server failed!");
                         return null;
                     }
                     string remotePath = fileModel.RemotePath;
                     if (!await sftp.Exists(remotePath))
                     {
-                        Util.ShowMessager($"Sftp File: {remotePath}, không tồn tại!");
+                        Util.ShowMessager($"Sftp File: [{remotePath}], not found!");
                         return null;
                     }
                     if (await sftp.DownloadFileAndUnzip(remotePath, storePath, zipPassword))
@@ -80,7 +80,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowMessager("connect to server failed!");
                         return false;
                     }
                     if (await sftp.UploadZipFileFormModel(model, path, zipPassword))
@@ -105,7 +105,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowMessager("connect to server failed!");
                         return;
                     }
                     foreach (var fileModel in removeFileModel)
@@ -113,11 +113,11 @@ namespace Upload.Common
 
                         if (await sftp.Exists(fileModel.RemotePath) && !await sftp.DeleteFile(fileModel.RemotePath))
                         {
-                            Util.ShowMessager($"{fileModel.RemotePath}, xóa thất bại!");
+                            Util.ShowMessager($"{fileModel.RemotePath}, delete failed!");
                         }
                         else
                         {
-                            Util.ShowMessager($"{fileModel.RemotePath}, xóa Ok!");
+                            Util.ShowMessager($"{fileModel.RemotePath}, delete Ok!");
                         }
                     }
 
@@ -147,7 +147,7 @@ namespace Upload.Common
                         {
                             if (!await sftp.Connect())
                             {
-                                Util.ShowMessager("Không thể kết nối!");
+                                Util.ShowMessager("connect to server failed!");
                                 return false;
                             }
                             int count = 0;
@@ -172,8 +172,8 @@ namespace Upload.Common
                                     }
                                     else
                                     {
-                                        Util.ShowMessager($"{storeFileModel.StorePath} -> {remotePath}, upload thất bại!");
-                                        MessageBox.Show($"{storeFileModel.StorePath} -> {remotePath}, upload thất bại!");
+                                        Util.ShowMessager($"{storeFileModel.StorePath} -> {remotePath}, upload failed!");
+                                        MessageBox.Show($"{storeFileModel.StorePath} -> {remotePath}, upload failed!");
                                     }
                                 }
                             }
@@ -204,7 +204,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowMessager("connect to server failed!");
                         return default;
                     }
 
