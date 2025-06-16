@@ -326,7 +326,7 @@ namespace Upload
                         }
                     }
                 }
-                Util.ShowDeleteFailedMessager(location.AppName, "");
+                Util.ShowDeletedMessager(location.AppName, "");
                 return true;
             }
             finally

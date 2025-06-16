@@ -3,32 +3,26 @@
   "WorkspaceRootPath": "D:\\C#\\Upload\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\service\\mytreeactional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\mytreeactional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Upload||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\modelview\\mytreefolder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\modelview\\mytreefolder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\service\\locationmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\locationmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\common\\util.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\common\\util.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\common\\util.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,43 +32,29 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MyTreeFolder.cs",
-              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\ModelView\\MyTreeFolder.cs",
-              "RelativeDocumentMoniker": "Upload\\ModelView\\MyTreeFolder.cs",
-              "ToolTip": "D:\\C#\\Upload\\Upload\\ModelView\\MyTreeFolder.cs",
-              "RelativeToolTip": "Upload\\ModelView\\MyTreeFolder.cs",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAUwFEAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-16T09:17:53.651Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MyTreeActional.cs",
-              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\MyTreeActional.cs",
-              "RelativeDocumentMoniker": "Upload\\Service\\MyTreeActional.cs",
-              "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\MyTreeActional.cs",
-              "RelativeToolTip": "Upload\\Service\\MyTreeActional.cs",
-              "ViewState": "AgIAAA8BAAAAAAAAAAAUwCABAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-16T09:14:30.147Z",
+              "Title": "Upload",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Upload.csproj",
+              "RelativeDocumentMoniker": "Upload\\Upload.csproj",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\Upload.csproj",
+              "RelativeToolTip": "Upload\\Upload.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-06-16T13:21:18.866Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "FormMain.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs",
               "RelativeDocumentMoniker": "Upload\\gui\\FormMain.cs",
               "ToolTip": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs",
               "RelativeToolTip": "Upload\\gui\\FormMain.cs",
-              "ViewState": "AgIAAKcAAAAAAAAAAAAwwMQAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMQAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-16T08:41:46.61Z",
               "EditorCaption": ""
@@ -93,7 +73,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Util.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Common\\Util.cs",
               "RelativeDocumentMoniker": "Upload\\Common\\Util.cs",
@@ -106,28 +86,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "LocationCreater.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\LocationCreater.cs",
               "RelativeDocumentMoniker": "Upload\\Service\\LocationCreater.cs",
               "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\LocationCreater.cs",
               "RelativeToolTip": "Upload\\Service\\LocationCreater.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwCwAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAA1wNYAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-16T08:37:32.58Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "LocationManagement.cs",
-              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\LocationManagement.cs",
-              "RelativeDocumentMoniker": "Upload\\Service\\LocationManagement.cs",
-              "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\LocationManagement.cs",
-              "RelativeToolTip": "Upload\\Service\\LocationManagement.cs",
-              "ViewState": "AgIAABcBAAAAAAAAAAAswBsBAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-16T08:37:30.588Z",
               "EditorCaption": ""
             }
           ]

@@ -48,13 +48,13 @@ namespace Upload.Service
             }
         }
 
-        private async Task UpdateProductItem()
+        private async Task UpdateProductItem(string name = null)
         {
             try
             {
                 CursorUtil.SetCursorIs(Cursors.WaitCursor);
                 string path = PathUtil.GetRemotePath();
-                if (!await UpdateItems(path, cbbProduct))
+                if (!await UpdateItems(path, cbbProduct, name))
                 {
                     Util.ShowMessager("Station invaild");
                 }
@@ -66,10 +66,10 @@ namespace Upload.Service
 
         }
 
-        private async Task UpdateStationItems()
+        private async Task UpdateStationItems(string name = null)
         {
             string remotePath = PathUtil.GetProductPath(Location);
-            if (!await UpdateItems(remotePath, cbbStation))
+            if (!await UpdateItems(remotePath, cbbStation, name))
             {
                 UpdateCombobox(cbbProgram, new List<string>());
                 ShowProgram(null);
@@ -89,7 +89,7 @@ namespace Upload.Service
                     }
                     if (await _locatonCreater.CreateProduct(new Location() { Product = name }))
                     {
-                        await UpdateProductItem();
+                        await UpdateProductItem(name);
                     }
                 });
             };
@@ -122,7 +122,7 @@ namespace Upload.Service
                 {
                     if (await _locatonCreater.CreateStation(new Location() { Product = Location.Product, Station = name }))
                     {
-                        await UpdateStationItems();
+                        await UpdateStationItems(name);
                     }
                 });
             };
@@ -155,7 +155,7 @@ namespace Upload.Service
                     }
                     if (await _locatonCreater.CreateProgram(new Location() { Product = Location.Product, Station = Location.Station, AppName = name }))
                     {
-                        await UpdateProgramListItems();
+                        await UpdateProgramListItems(name);
                     }
                 });
             };
@@ -204,7 +204,7 @@ namespace Upload.Service
             });
         }
 
-        public async Task UpdateProgramListItems()
+        public async Task UpdateProgramListItems(string selectName = null)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace Upload.Service
                 {
                     list.AddRange(_appList.ProgramPaths.Keys);
                 }
-                UpdateCombobox(cbbProgram, list);
+                UpdateCombobox(cbbProgram, list, selectName);
                 if (list.Count <= 0)
                 {
                     ShowProgram(null);
@@ -248,7 +248,7 @@ namespace Upload.Service
             }
         }
 
-        private async Task<bool> UpdateItems(string remotePath, ComboBox target)
+        private async Task<bool> UpdateItems(string remotePath, ComboBox target, string selectName)
         {
             try
             {
@@ -265,7 +265,7 @@ namespace Upload.Service
                         return false;
                     }
                     List<string> list = await sftp.ListDirectoryName(remotePath);
-                    UpdateCombobox(target, list);
+                    UpdateCombobox(target, list, selectName);
                     return list.Count > 0;
                 }
             }
@@ -276,7 +276,7 @@ namespace Upload.Service
 
         }
 
-        private void UpdateCombobox(ComboBox target, List<string> list)
+        private void UpdateCombobox(ComboBox target, List<string> list, string selectName = null)
         {
             try
             {
@@ -287,7 +287,12 @@ namespace Upload.Service
                     target.Items.AddRange(list.ToArray());
                     if (list.Count > 0)
                     {
-                        target.SelectedIndex = 0;
+                        int selectedItem = 0;
+                        if (!string.IsNullOrEmpty(selectName))
+                        {
+                            selectedItem = target.Items.IndexOf(selectName.ToUpper().Trim());
+                        }
+                        target.SelectedIndex = selectedItem == -1 ? 0: selectedItem;
                     }
                     else
                     {

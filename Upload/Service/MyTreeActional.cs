@@ -249,11 +249,13 @@ namespace Upload.Service
         private TreeNode CreateNewNode(string filePath)
         {
             string fileName = Path.GetFileName(filePath);
-            TreeNode newNode = new TreeNode(fileName);
-            newNode.Tag = new StoreFileModel()
+            TreeNode newNode = new TreeNode(fileName)
             {
-                StorePath = filePath,
-                RemoteDir = RemoteDir
+                Tag = new StoreFileModel()
+                {
+                    StorePath = filePath,
+                    RemoteDir = RemoteDir
+                }
             };
             return newNode;
         }
