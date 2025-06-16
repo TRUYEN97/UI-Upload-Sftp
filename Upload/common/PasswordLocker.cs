@@ -29,16 +29,16 @@ namespace Upload.Common
 
         public static bool CheckPassword()
         {
-            string inputPw = InputForm.GetInputPassword("Mật khẩu");
+            string inputPw = InputForm.GetInputPassword("Password");
             string password = AutoDLConfig.ConfigModel.Password;
             if (!string.IsNullOrWhiteSpace(inputPw) && Util.GetMD5HashFromString(inputPw).Equals(password))
             {
-                LoggerBox.Addlog("Mật khẩu đúng");
+                LoggerBox.Addlog("Correct password");
                 return true;
             }
             else
             {
-                LoggerBox.Addlog("Mật khẩu không đúng!");
+                LoggerBox.Addlog("Password invaild!");
                 return false;
             }
         }

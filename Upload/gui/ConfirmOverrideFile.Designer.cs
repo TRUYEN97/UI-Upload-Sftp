@@ -39,9 +39,9 @@
             this.cbAll.AutoSize = true;
             this.cbAll.Location = new System.Drawing.Point(53, 104);
             this.cbAll.Name = "cbAll";
-            this.cbAll.Size = new System.Drawing.Size(75, 17);
+            this.cbAll.Size = new System.Drawing.Size(37, 17);
             this.cbAll.TabIndex = 0;
-            this.cbAll.Text = "Cho tất cả";
+            this.cbAll.Text = "All";
             this.cbAll.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.cbAll.UseVisualStyleBackColor = true;
             // 
@@ -77,7 +77,7 @@
             this.btCancel.UseVisualStyleBackColor = true;
             this.btCancel.Click += new System.EventHandler(this.btCancel_Click);
             // 
-            // ConfirmOverrideFile
+            // ConfirmOverrideForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -89,9 +89,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ConfirmOverrideFile";
+            this.Name = "ConfirmOverrideForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Thông báo";
+            this.Text = "Warning";
             this.ResumeLayout(false);
             this.PerformLayout();
 

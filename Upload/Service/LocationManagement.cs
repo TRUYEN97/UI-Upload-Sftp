@@ -56,7 +56,7 @@ namespace Upload.Service
                 string path = PathUtil.GetRemotePath();
                 if (!await UpdateItems(path, cbbProduct))
                 {
-                    Util.ShowMessager("Chưa cài trạm");
+                    Util.ShowMessager("Station invaild");
                 }
             }
             finally
@@ -80,7 +80,7 @@ namespace Upload.Service
         {
             this.formMain.BtCreateProduct.Click += (s, e) =>
             {
-                string name = InputForm.GetInputString("Tên hàng");
+                string name = InputForm.GetInputString("Product name");
                 Task.Run(async () =>
                 {
                     if (name == null)
@@ -97,7 +97,7 @@ namespace Upload.Service
             this.formMain.BtDeleteProduct.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(Location.Product)
-                    || MessageBox.Show($"Bạn có muốn xóa [{Location.Product}] không?", "Cảnh báo", MessageBoxButtons.YesNo) != DialogResult.Yes
+                    || MessageBox.Show($"Do you want to delete [{Location.Product}]?", "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes
                     || !PasswordLocker.CheckPassword())
                 {
                     return;
@@ -113,7 +113,7 @@ namespace Upload.Service
 
             this.formMain.BtCreateStation.Click += (s, e) =>
             {
-                string name = InputForm.GetInputString("Tên trạm");
+                string name = InputForm.GetInputString("Station name");
                 if (name == null || string.IsNullOrWhiteSpace(Location.Product))
                 {
                     return;
@@ -130,7 +130,7 @@ namespace Upload.Service
             this.formMain.BtDeleteStation.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(Location.Product) || string.IsNullOrWhiteSpace(Location.Station)
-                    || MessageBox.Show($"Bạn có muốn xóa [{Location.Product}/{Location.Station}] không?", "Cảnh báo", MessageBoxButtons.YesNo) != DialogResult.Yes
+                    || MessageBox.Show($"Do you want to delete [{Location.Product}/{Location.Station}]?", "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes
                     || !PasswordLocker.CheckPassword())
                 {
                     return;
@@ -146,7 +146,7 @@ namespace Upload.Service
 
             this.formMain.BtCreateProgram.Click += (s, e) =>
             {
-                string name = InputForm.GetInputString("Tên chương trình");
+                string name = InputForm.GetInputString("Program name");
                 Task.Run(async () =>
                 {
                     if (name == null || string.IsNullOrWhiteSpace(Location.Product) || string.IsNullOrWhiteSpace(Location.Station))
@@ -163,7 +163,7 @@ namespace Upload.Service
             this.formMain.BtDeleteProgram.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(Location.Product) || string.IsNullOrWhiteSpace(Location.Station) || string.IsNullOrWhiteSpace(Location.AppName)
-                    || MessageBox.Show($"Bạn có muốn xóa [{Location.Product}/{Location.Station}/{Location.AppName}] không?", "Cảnh báo", MessageBoxButtons.YesNo) != DialogResult.Yes
+                    || MessageBox.Show($"Do you want to delete [{Location.Product}/{Location.Station}/{Location.AppName}]?", "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes
                     || !PasswordLocker.CheckPassword())
                 {
                     return;
@@ -257,7 +257,7 @@ namespace Upload.Service
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     if (!await sftp.Exists(remotePath))

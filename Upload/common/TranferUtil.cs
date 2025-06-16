@@ -37,7 +37,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("connect to server failed!");
+                        Util.ShowConnectFailedMessager();
                         return null;
                     }
                     string remotePath = fileModel.RemotePath;
@@ -80,7 +80,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("connect to server failed!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     if (await sftp.UploadZipFileFormModel(model, path, zipPassword))
@@ -105,7 +105,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("connect to server failed!");
+                        Util.ShowConnectFailedMessager();
                         return;
                     }
                     foreach (var fileModel in removeFileModel)
@@ -147,7 +147,7 @@ namespace Upload.Common
                         {
                             if (!await sftp.Connect())
                             {
-                                Util.ShowMessager("connect to server failed!");
+                                Util.ShowConnectFailedMessager();
                                 return false;
                             }
                             int count = 0;
@@ -204,7 +204,7 @@ namespace Upload.Common
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("connect to server failed!");
+                        Util.ShowConnectFailedMessager();
                         return default;
                     }
 

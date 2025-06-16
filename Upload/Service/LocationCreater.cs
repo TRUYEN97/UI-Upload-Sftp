@@ -31,22 +31,22 @@ namespace Upload
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     string prodcutPath = PathUtil.GetProductPath(location);
                     if (await sftp.Exists(prodcutPath))
                     {
-                        Util.ShowMessager($"Hàng {location.Product} đã tồn tại!");
+                        Util.ShowMessager($"Product {location.Product} has exists!");
                         return true;
                     }
                     if (await sftp.CreateDirectory(prodcutPath))
                     {
-                        Util.ShowMessager($"Hàng {location.Product} đã tạo thành công!");
+                        Util.ShowCreatedMessager("Product", location.Product);
                         return true;
                     }
                 }
-                Util.ShowMessager($"Hàng {location.Product} đã tạo thất bại!");
+                Util.ShowCreateFailedMessager("Product", location.Product);
                 return false;
             }
             finally
@@ -69,22 +69,22 @@ namespace Upload
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     string prodcutPath = PathUtil.GetProductPath(location);
                     if (!await sftp.Exists(prodcutPath))
                     {
-                        Util.ShowMessager($"Hàng {location.Product} không tồn tại!");
+                        Util.ShowNotFoundMessager("Product", location.Product);
                         return true;
                     }
                     if (await sftp.DeleteFolder(prodcutPath, true))
                     {
-                        Util.ShowMessager($"Hàng {location.Product} đã xóa thành công!");
+                        Util.ShowCreatedMessager("Product", location.Product);
                         return true;
                     }
                 }
-                Util.ShowMessager($"Hàng {location.Product} đã xóa thất bại!");
+                Util.ShowCreateFailedMessager("Product", location.Product);
                 return false;
 
 
@@ -110,34 +110,34 @@ namespace Upload
                     {
                         if (!await sftp.Connect())
                         {
-                            Util.ShowMessager("Không thể kết nối!");
+                            Util.ShowConnectFailedMessager();
                             return false;
                         }
                         string path = PathUtil.GetStationPath(location);
                         if (await sftp.Exists(path))
                         {
-                            Util.ShowMessager($"Trạm {location.Station} đã tồn tại!");
+                            Util.ShowNotFoundMessager("Station", location.Station);
                             return true;
                         }
                         string commonFilePath = PathUtil.GetCommonPath(location);
                         if (!await sftp.Exists(commonFilePath) && !await sftp.CreateDirectory(commonFilePath))
                         {
-                            Util.ShowMessager($"Khởi tạo {location.Station}/Common đã thất bại!");
+                            Util.ShowCreateFailedMessager($"{location.Station}/Common", "");
                             return false;
                         }
                         if (!await sftp.CreateDirectory(path))
                         {
-                            Util.ShowMessager($"Trạm {location.Station} đã tạo thất bại!");
+                            Util.ShowCreateFailedMessager("station" ,location.Station);
                             return false;
                         }
                         await TranferUtil.UploadModel(new AccessUserListModel(), PathUtil.GetStationAccessUserPath(location), zipPassword);
                         if (!await CreateAppModel(location))
                         {
-                            Util.ShowMessager($"Trạm {location.Station} khởi tạo app list thất bại!");
+                            Util.ShowMessager($"Station {location.Station} create app list failed!");
                             return false;
                         }
                     }
-                    Util.ShowMessager($"Trạm {location.Station} đã tạo thành công!");
+                    Util.ShowCreatedMessager("Station", location.Station);
                     return true;
                 });
 
@@ -163,13 +163,13 @@ namespace Upload
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     string path = PathUtil.GetStationPath(loca);
                     if (!await sftp.Exists(path))
                     {
-                        Util.ShowMessager($"Trạm {loca.Station} không tồn tại!");
+                        Util.ShowDeletedMessager("Station", loca.Station);
                         return true;
                     }
                     var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
@@ -178,12 +178,12 @@ namespace Upload
                     {
                         if (await sftp.DeleteFolder(path))
                         {
-                            Util.ShowMessager($"Trạm {loca.Station} đã xóa thành công!");
+                            Util.ShowDeletedMessager("Station", loca.Station);
                             return true;
                         }
                     }
                 }
-                Util.ShowMessager($"Trạm {loca.Station} đã xóa thất bại!");
+                Util.ShowDeleteFailedMessager("Station", loca.Station);
                 return false;
 
             }
@@ -207,16 +207,16 @@ namespace Upload
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     if (await CreateAppModel(location))
                     {
-                        Util.ShowMessager($"Chương trình [{location.AppName}] đã tạo thành công!");
+                        Util.ShowCreatedMessager("Program", location.AppName);
                         return true;
                     }
                 }
-                Util.ShowMessager($"Chương trình [{location.AppName}] đã tạo thất bại!");
+                Util.ShowCreateFailedMessager("Program", location.AppName);
                 return false;
 
             }
@@ -258,12 +258,12 @@ namespace Upload
                             Path = programDataPath
                         }, programDataPath, zipPassword))
                         {
-                            Util.ShowMessager($"Trạm [{loca.Station}] khởi tạo [{loca.AppName}] app data thất bại!");
+                            Util.ShowMessager($"Station [{loca.Station}] create [{loca.AppName}] app data faild!");
                             return false;
                         }
                         if (!await TranferUtil.UploadModel(new AccessUserListModel(), programAccessUserPath, zipPassword))
                         {
-                            Util.ShowMessager($"Trạm [{loca.Station}] tạo dữ liệu access user cho [{loca.AppName}] thất bại!");
+                            Util.ShowMessager($"Station [{loca.Station}] create access user for [{loca.AppName}] failed!");
                             return false;
                         }
                         model.ProgramPaths.Add(loca.AppName, new ProgramPathModel()
@@ -300,7 +300,7 @@ namespace Upload
                 {
                     if (!await sftp.Connect())
                     {
-                        Util.ShowMessager("Không thể kết nối!");
+                        Util.ShowConnectFailedMessager();
                         return false;
                     }
                     var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
@@ -320,13 +320,13 @@ namespace Upload
                             appList.ProgramPaths.Remove(loca.AppName);
                             if (!await TranferUtil.UploadModel(appList, responceRs.Item2, zipPassword))
                             {
-                                Util.ShowMessager($"{location.AppName} xóa thất bại!");
+                                Util.ShowDeleteFailedMessager(location.AppName,"");
                                 return false;
                             }
                         }
                     }
                 }
-                Util.ShowMessager($"{location.AppName} đã xóa!");
+                Util.ShowDeleteFailedMessager(location.AppName, "");
                 return true;
             }
             finally

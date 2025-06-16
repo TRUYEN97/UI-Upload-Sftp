@@ -138,6 +138,11 @@ namespace Upload.Common
             Util.SafeInvoke(form, () => { form.Cursor = cursor; });
         }
 
+        internal static void ShowConnectFailedMessager()
+        {
+            ShowMessager("Connect to server failed!");
+        }
+
 
 
         [DllImport("Shell32.dll", CharSet = CharSet.Auto)]
@@ -170,6 +175,29 @@ namespace Upload.Common
                 (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 
             return Icon.FromHandle(shinfo.hIcon);
+        }
+
+        internal static void ShowNotFoundMessager(string type, string stationName)
+        {
+            ShowMessager($"{type} {stationName} not found!");
+        }
+
+        internal static void ShowCreateFailedMessager(string type, string station)
+        {
+            ShowMessager($"Create {type} {station} failed!");
+        }
+        internal static void ShowCreatedMessager(string type, string station)
+        {
+            ShowMessager($"Create {type} {station} ok!");
+        }
+        
+        internal static void ShowDeleteFailedMessager(string type, string station)
+        {
+            ShowMessager($"Delete {type} {station} failed!");
+        }
+        internal static void ShowDeletedMessager(string type, string station)
+        {
+            ShowMessager($"Delete {type} {station} ok!");
         }
     }
 }

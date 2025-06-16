@@ -12,6 +12,7 @@ using AutoDownload.Gui;
 using System.Threading;
 using static Upload.Service.LockManager;
 using Upload.Config;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Upload.Service
 {
@@ -249,23 +250,72 @@ namespace Upload.Service
         {
             string fileName = Path.GetFileName(filePath);
             TreeNode newNode = new TreeNode(fileName);
-            FileModel newfileModel = new StoreFileModel()
+            newNode.Tag = new StoreFileModel()
             {
                 StorePath = filePath,
                 RemoteDir = RemoteDir
             };
-            string fullPath = newNode.Parent?.FullPath;
-            if (string.IsNullOrWhiteSpace(fullPath))
-            {
-                newfileModel.ProgramPath = fileName;
-            }
-            else
-            {
-                newfileModel.ProgramPath = Path.Combine(fullPath, fileName);
-            }
-            newNode.Tag = newfileModel;
             return newNode;
         }
+
+        internal void AddFileNode(TreeNodeCollection nodes, TreeNode fileNode, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
+        {
+            string fileName = fileNode.Text;
+            string ext = Path.GetExtension(fileName).ToLower();
+            if (string.IsNullOrEmpty(ext))
+            {
+                ext = "__no_ext__";
+            }
+            if (!_imageList.Images.ContainsKey(ext))
+            {
+                Util.SafeInvoke(_treeView, () =>
+                {
+                    try
+                    {
+                        Icon icon = Util.GetIconForExtension(fileName);
+                        _imageList.Images.Add(ext, icon);
+                    }
+                    catch
+                    {
+                        _imageList.Images.Add(ext, SystemIcons.Application.ToBitmap());
+                    }
+                });
+            }
+            fileNode.ImageKey = ext;
+            fileNode.SelectedImageKey = ext;
+            TreeNode oldNode = checkUnique ? FindFile(nodes, fileNode.Text) : null;
+            Util.SafeInvoke(_treeView, () =>
+            {
+                fileNode.NodeFont = FILE_FONT;
+                if (oldNode == null)
+                {
+                    nodes.Add(fileNode);
+                    if (fileNode.Tag is StoreFileModel storeFileModel)
+                    {
+                        fileNode.ForeColor = FILE_CREATE_COLOR;
+                        string fullPath = fileNode.Parent?.FullPath;
+                        if (string.IsNullOrWhiteSpace(fullPath))
+                        {
+                            storeFileModel.ProgramPath = fileName;
+                        }
+                        else
+                        {
+                            storeFileModel.ProgramPath = Path.Combine(fullPath, fileName);
+                        }
+                    }
+                    else
+                    {
+                        fileNode.ForeColor = FILE_COLOR;
+                    }
+                }
+                else if (confirmOverrideFile == null || confirmOverrideFile.IsAccept($"[{fileName}] has exists!\r\nDo you want to update this file?"))
+                {
+                    UpdateFileModel(nodes, fileNode, oldNode);
+                }
+            });
+
+        }
+
 
         internal TreeNode AddNewFolderNode(TreeNodeCollection nodes, TreeNode newNode, bool checkUnique)
         {
@@ -338,55 +388,6 @@ namespace Upload.Service
                 }
                 return rm;
             });
-        }
-
-        internal void AddFileNode(TreeNodeCollection nodes, TreeNode fileNode, ConfirmOverrideForm confirmOverrideFile = null, bool checkUnique = true)
-        {
-            string text = fileNode.Text;
-            string ext = Path.GetExtension(text).ToLower();
-            if (string.IsNullOrEmpty(ext))
-            {
-                ext = "__no_ext__";
-            }
-            if (!_imageList.Images.ContainsKey(ext))
-            {
-                Util.SafeInvoke(_treeView, () =>
-                {
-                    try
-                    {
-                        Icon icon = Util.GetIconForExtension(text);
-                        _imageList.Images.Add(ext, icon);
-                    }
-                    catch
-                    {
-                        _imageList.Images.Add(ext, SystemIcons.Application.ToBitmap());
-                    }
-                });
-            }
-            fileNode.ImageKey = ext;
-            fileNode.SelectedImageKey = ext;
-            TreeNode oldNode = checkUnique ? FindFile(nodes, fileNode.Text) : null;
-            Util.SafeInvoke(_treeView, () =>
-            {
-                fileNode.NodeFont = FILE_FONT;
-                if (oldNode == null)
-                {
-                    if (fileNode.Tag is StoreFileModel)
-                    {
-                        fileNode.ForeColor = FILE_CREATE_COLOR;
-                    }
-                    else
-                    {
-                        fileNode.ForeColor = FILE_COLOR;
-                    }
-                    nodes.Add(fileNode);
-                }
-                else if (confirmOverrideFile == null || confirmOverrideFile.IsAccept($"[{text}] has exists!\r\nDo you want to update this file?"))
-                {
-                    UpdateFileModel(nodes, fileNode, oldNode);
-                }
-            });
-
         }
 
         internal void UpdateFile(TreeNode fileNodeOld, string newFilePath)
