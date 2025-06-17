@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\C#\\Upload\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\common\\tranferutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\common\\tranferutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\service\\uploader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\uploader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\modelview\\mytreefolderforapp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\modelview\\mytreefolderforapp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|d:\\c#\\upload\\upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\service\\locationcreater.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\service\\mytreeactional.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -17,6 +21,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\modelview\\mytreefolder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\modelview\\mytreefolder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\modelview\\mytreefolderforapp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|solutionrelative:upload\\modelview\\mytreefolderforapp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9971CCDF-E9E2-4DAA-B149-5E7E7FFE6D81}|Upload\\Upload.csproj|D:\\C#\\Upload\\upload\\gui\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
@@ -30,36 +38,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LocationCreater.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\LocationCreater.cs",
+              "RelativeDocumentMoniker": "Upload\\Service\\LocationCreater.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\LocationCreater.cs",
+              "RelativeToolTip": "Upload\\Service\\LocationCreater.cs",
+              "ViewState": "AgIAACEBAAAAAAAAAIAwwDcBAABtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T13:25:52.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "TranferUtil.cs",
+              "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Common\\TranferUtil.cs",
+              "RelativeDocumentMoniker": "Upload\\Common\\TranferUtil.cs",
+              "ToolTip": "D:\\C#\\Upload\\Upload\\Common\\TranferUtil.cs",
+              "RelativeToolTip": "Upload\\Common\\TranferUtil.cs",
+              "ViewState": "AgIAAOwAAAAAAAAAAADgvwEBAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T13:17:17.762Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Uploader.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\Uploader.cs",
               "RelativeDocumentMoniker": "Upload\\Service\\Uploader.cs",
               "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\Uploader.cs",
               "RelativeToolTip": "Upload\\Service\\Uploader.cs",
-              "ViewState": "AgIAAMEAAAAAAAAAAAAywNQAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAIAwwFIAAABtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-17T10:25:28.915Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "MyTreeActional.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\Service\\MyTreeActional.cs",
               "RelativeDocumentMoniker": "Upload\\Service\\MyTreeActional.cs",
               "ToolTip": "D:\\C#\\Upload\\Upload\\Service\\MyTreeActional.cs",
               "RelativeToolTip": "Upload\\Service\\MyTreeActional.cs",
-              "ViewState": "AgIAADsBAAAAAAAAAAAAAD4BAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAABQBAAAAAAAAAAAwwD4BAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-17T09:44:39.577Z"
+              "WhenOpened": "2025-06-17T09:44:39.577Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "MyTreeFolderForApp.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\ModelView\\MyTreeFolderForApp.cs",
               "RelativeDocumentMoniker": "Upload\\ModelView\\MyTreeFolderForApp.cs",
@@ -71,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "MyTreeFolder.cs",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\ModelView\\MyTreeFolder.cs",
               "RelativeDocumentMoniker": "Upload\\ModelView\\MyTreeFolder.cs",
@@ -79,11 +114,12 @@
               "RelativeToolTip": "Upload\\ModelView\\MyTreeFolder.cs",
               "ViewState": "AgIAAIYAAAAAAAAAAAASwJsAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-17T09:26:38.712Z"
+              "WhenOpened": "2025-06-17T09:26:38.712Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "FormMain.cs [Design]",
               "DocumentMoniker": "D:\\C#\\Upload\\Upload\\gui\\FormMain.cs",
               "RelativeDocumentMoniker": "Upload\\gui\\FormMain.cs",

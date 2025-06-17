@@ -128,7 +128,7 @@ namespace Upload.Common
             {
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
-            
+
         }
 
         public static async Task<bool> UploadFile(ICollection<FileModel> fileModels, string zipPassword)
@@ -186,7 +186,7 @@ namespace Upload.Common
             {
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
-            
+
         }
 
         internal static async Task<(AppList, string)> GetAppListModel(Location location, string zipPassword)
@@ -200,7 +200,7 @@ namespace Upload.Common
             string uiStorePath = PathUtil.GetUiStoreRemotePath();
             return (await GetModelConfig<UiStoreModel>(uiStorePath, zipPassword), uiStorePath);
         }
-        
+
         internal static async Task<(bool, string)> UpdateUiStoreModel(UiStoreModel storeModel, string zipPassword)
         {
             string uiStorePath = PathUtil.GetUiStoreRemotePath();
@@ -244,30 +244,21 @@ namespace Upload.Common
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
         }
-        internal static async Task<HashSet<FileModel>> GetCanDeleteFileModelsAsync(string thisAppPath, List<FileModel> fileModels, AppList appList, string zipPassword)
+        internal static async Task<HashSet<FileModel>> GetCanDeleteFileModelsAsync(List<FileModel> fileModels,
+            AppList appList, string zipPassword, string thisAppPath = null)
         {
             Dictionary<string, HashSet<FileModel>> canDeleteFileGroups = fileModels.GroupBy(f => f.Md5).ToDictionary(g => g.Key, g => new HashSet<FileModel>(g.Select(f => f)));
             var fileModelUsed = new Dictionary<string, FileModel>();
             AppModel appModel = null;
             foreach (var appInfo in appList.ProgramPaths)
             {
+                if (!string.IsNullOrEmpty(thisAppPath) && thisAppPath == appInfo.Value.AppPath)
+                {
+                    continue;
+                }
                 appModel = await GetModelConfig<AppModel>(appInfo.Value.AppPath, zipPassword);
                 Dictionary<string, HashSet<FileModel>> md5FileGroups = appModel?.FileModels?.GroupBy(f => f.Md5).ToDictionary(g => g.Key, g => new HashSet<FileModel>(g.Select(f => f)));
-                canDeleteFileGroups = canDeleteFileGroups.Where(f =>
-                {
-                    if (!md5FileGroups.ContainsKey(f.Key))
-                    {
-                        return true;
-                    }
-                    if (thisAppPath == appInfo.Value.AppPath)
-                    {
-                        if (md5FileGroups.TryGetValue(f.Key, out HashSet<FileModel> filePaths) && filePaths.SetEquals(f.Value))
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                }).ToDictionary(f=>f.Key, f => f.Value);
+                canDeleteFileGroups = canDeleteFileGroups.Where(f => !md5FileGroups.ContainsKey(f.Key)).ToDictionary(f => f.Key, f => f.Value);
                 if (canDeleteFileGroups.Count == 0) break;
             }
             return canDeleteFileGroups.Values.SelectMany(set => set).Distinct().ToHashSet();

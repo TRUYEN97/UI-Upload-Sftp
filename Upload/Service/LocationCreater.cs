@@ -309,7 +309,7 @@ namespace Upload
                             AppModel appModel = await TranferUtil.GetModelConfig<AppModel>(modelPath.AppPath, zipPassword);
                             if (appModel?.FileModels != null)
                             {
-                                HashSet<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(modelPath.AppPath, appModel.FileModels.ToList(), appList, zipPassword);
+                                HashSet<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(appModel.FileModels.ToList(), appList, zipPassword, modelPath.AppPath);
                                 await TranferUtil.RemoveRemoteFile(canDeletes);
                                 await sftp.DeleteFile(modelPath.AppPath);
                             }

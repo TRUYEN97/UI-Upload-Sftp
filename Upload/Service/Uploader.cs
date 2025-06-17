@@ -80,7 +80,7 @@ namespace Upload.Service
                             if (await TranferUtil.UploadModel(appModel, appModel.Path, zipPassword))
                             {
                                 AppList appList = await TranferUtil.GetModelConfig<AppList>(appModel.RemoteAppListPath, zipPassword);
-                                HashSet<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(appModel.Path, showerModel.RemoveFileModel, appList, zipPassword);
+                                HashSet<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(showerModel.RemoveFileModel, appList, zipPassword);
                                 await TranferUtil.RemoveRemoteFile(canDeletes);
                                 await locationManagement.UpdateProgramListItems(locationManagement?.Location?.AppName);
                                 LoggerBox.Addlog("update done");
