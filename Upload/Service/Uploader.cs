@@ -14,7 +14,7 @@ namespace Upload.Service
 {
     internal partial class Uploader
     {
-        private readonly MyTreeFolder _treeVersion;
+        private readonly MyTreeFolderForApp _treeVersion;
         private readonly FormMain _formMain;
         private readonly AccessUserControl _accessControl;
         private AppShowerModel showerModel;
@@ -24,7 +24,7 @@ namespace Upload.Service
         {
             this._formMain = formMain;
             this.zipPassword = ConstKey.ZIP_PASSWORD;
-            this._treeVersion = new MyTreeFolder(formMain.TreeVersion, zipPassword);
+            this._treeVersion = new MyTreeFolderForApp(formMain.TreeVersion, zipPassword);
             this.checkConditon = new CheckConditon(formMain);
             this._accessControl = accessControl;
             locationManagement.ShowVerionAction += (v) =>
@@ -75,24 +75,24 @@ namespace Upload.Service
                         var appModel = showerModel.AppModel;
                         if(await TranferUtil.UploadFile(appModel.FileModels, zipPassword))
                         {
-                            appModel.FileModels = FilterFileModelClass(appModel.FileModels);
+                            appModel.FileModels = Util.FilterFileModelClass(appModel.FileModels);
                             //////////////////////////////
                             if (await TranferUtil.UploadModel(appModel, appModel.Path, zipPassword))
                             {
                                 AppList appList = await TranferUtil.GetModelConfig<AppList>(appModel.RemoteAppListPath, zipPassword);
-                                List<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(appModel.Path, showerModel.RemoveFileModel, appList, zipPassword);
+                                HashSet<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(appModel.Path, showerModel.RemoveFileModel, appList, zipPassword);
                                 await TranferUtil.RemoveRemoteFile(canDeletes);
-                                await locationManagement.UpdateProgramListItems();
-                                LoggerBox.Addlog("Hoàn thành cập nhập");
+                                await locationManagement.UpdateProgramListItems(locationManagement?.Location?.AppName);
+                                LoggerBox.Addlog("update done");
                                 return;
                             }
                         }
-                        LoggerBox.Addlog($"Cập nhập thất bại");
+                        LoggerBox.Addlog("Update failded");
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Lỗi:{ex.Message}");
-                        LoggerBox.Addlog($"Cập nhập thất bại:{ex.Message}");
+                        MessageBox.Show($"Error:{ex.Message}");
+                        LoggerBox.Addlog($"Update failded:{ex.Message}");
                     }
                 }
             }
@@ -149,26 +149,6 @@ namespace Upload.Service
         {
             ResetProgramData();
             _accessControl.Clear();
-        }
-
-        private HashSet<FileModel> FilterFileModelClass(ICollection<FileModel> fileModels)
-        {
-            HashSet<FileModel> rs = new HashSet<FileModel>();
-            if (fileModels != null)
-            {
-                foreach (var fileModel in fileModels)
-                {
-                    if (fileModel is StoreFileModel storeFileModel)
-                    {
-                        rs.Add(storeFileModel.FileModel());
-                    }
-                    else
-                    {
-                        rs.Add(fileModel);
-                    }
-                }
-            }
-            return rs;
         }
 
         private async Task<bool> UpdateAppModel()
@@ -232,7 +212,7 @@ namespace Upload.Service
                     {
                         Util.SafeInvoke(_own, () =>
                         {
-                            MessageBox.Show(_own,$"{textBoxElem.Key} không được để rỗng!");
+                            MessageBox.Show(_own,$"{textBoxElem.Key} is empty!");
                         });
                         ok = false;
                     }

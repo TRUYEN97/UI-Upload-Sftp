@@ -317,6 +317,33 @@ namespace Upload.Service
             });
 
         }
+        internal void UpdateFile(TreeNode fileNodeOld, string newFilePath)
+        {
+            TreeNodeCollection treeNodeCollection = fileNodeOld?.Parent?.Nodes ?? _treeView.Nodes;
+            TreeNode newNode = CreateNewNode(newFilePath);
+            UpdateFileModel(treeNodeCollection, newNode, fileNodeOld);
+        }
+
+        private TreeNode UpdateFileModel(TreeNodeCollection nodes, TreeNode newNode, TreeNode oldNode)
+        {
+            newNode.ForeColor = FILE_UPDATE_COLOR;
+            newNode.Text = oldNode.Text;
+            if (oldNode.Tag is FileModel fileModel)
+            {
+                if (!(oldNode.Tag is StoreFileModel))
+                {
+                    RemoveFileModel.Add(fileModel);
+                }
+                if (newNode.Tag is StoreFileModel storeFileModel)
+                {
+                    storeFileModel.ProgramPath = fileModel.ProgramPath;
+                }
+            }
+            oldNode.Remove();
+            nodes.Add(newNode);
+            return newNode;
+        }
+
 
 
         internal TreeNode AddNewFolderNode(TreeNodeCollection nodes, TreeNode newNode, bool checkUnique)
@@ -390,41 +417,6 @@ namespace Upload.Service
                 }
                 return rm;
             });
-        }
-
-        internal void UpdateFile(TreeNode fileNodeOld, string newFilePath)
-        {
-            TreeNodeCollection treeNodeCollection;
-            if (fileNodeOld?.Parent != null)
-            {
-                treeNodeCollection = fileNodeOld?.Parent.Nodes;
-            }
-            else
-            {
-                treeNodeCollection = _treeView.Nodes;
-            }
-            TreeNode newNode = CreateNewNode(newFilePath);
-            newNode.Text = fileNodeOld.Text;
-            if (newNode.Tag is StoreFileModel storeFileModel && fileNodeOld.Tag is StoreFileModel storeFileModelOld)
-            {
-                storeFileModel.ProgramPath = storeFileModelOld.ProgramPath;
-            }
-            UpdateFileModel(treeNodeCollection, newNode, fileNodeOld);
-        }
-
-        private TreeNode UpdateFileModel(TreeNodeCollection nodes, TreeNode fileNode, TreeNode oldNode)
-        {
-            fileNode.ForeColor = FILE_UPDATE_COLOR;
-            if (oldNode.TreeView != null)
-            {
-                if (!(oldNode.Tag is StoreFileModel) && oldNode.Tag is FileModel fileModel)
-                {
-                    RemoveFileModel.Add(fileModel);
-                }
-                oldNode.Remove();
-            }
-            nodes.Add(fileNode);
-            return fileNode;
         }
 
         internal void RenameNode(TreeNode rootNode, string newName)
@@ -554,10 +546,7 @@ namespace Upload.Service
             return oldNode;
         }
 
-        internal TreeNode GetNodeSelected()
-        {
-            return _treeView.SelectedNode;
-        }
+        internal TreeNode SelectedNode => _treeView.SelectedNode;
 
         internal TreeNodeCollection GetNodeCollection()
         {

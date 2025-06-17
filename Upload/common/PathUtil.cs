@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Upload.Config;
 
 namespace Upload.Common
@@ -49,6 +50,19 @@ namespace Upload.Common
         internal static string GetCommonPath(Location location)
         {
             return Path.Combine(GetStationPath(location),"Common");
+        }
+
+        internal static string GetUiStoreRemoteFolder()
+        {
+            return Path.Combine(GetRemotePath(), "UiStoreUpdate");
+        }
+        internal static string GetUiStoreRemotePath()
+        {
+            return Path.Combine(GetUiStoreRemoteFolder(), "UiStoreModel.zip");
+        }
+        internal static string GetUiStoreRemoteCommonPath()
+        {
+            return Path.Combine(GetUiStoreRemoteFolder(), "Common");
         }
     }
 }

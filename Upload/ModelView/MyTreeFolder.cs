@@ -22,14 +22,11 @@ namespace Upload.ModelView
     {
         private readonly string zipPassword;
         private readonly TreeView treeView;
-        private readonly ContextMenuStrip _treeFolderContextMenu;
-        private readonly ContextMenuStrip _treeFileContextMenu;
-        private readonly ContextMenuStrip _treeContextMenu;
-        private readonly MyTreeActional _myTreeActional;
-        public event Action<FileModel> OnChosseMainFile;
-        public event Action<FileModel> OnChosseRunFile;
-        public event Action<FileModel> OnChosseCloseFile;
-        private List<TreeNode> selectedNodes = new List<TreeNode>();
+        protected readonly ContextMenuStrip _treeFolderContextMenu;
+        protected readonly ContextMenuStrip _treeFileContextMenu;
+        protected readonly ContextMenuStrip _treeContextMenu;
+        protected readonly MyTreeActional _myTreeActional;
+        private readonly List<TreeNode> selectedNodes = new List<TreeNode>();
         private bool _isEmpty;
 
         public HashSet<FileModel> RemoveFileModel { get => _myTreeActional.RemoveFileModel; }
@@ -46,9 +43,6 @@ namespace Upload.ModelView
             _treeFileContextMenu = new ContextMenuStrip();
             _treeContextMenu = new ContextMenuStrip();
             _isEmpty = true;
-            InitTreeFolderContextMenu();
-            InitTreeFileContextMenu();
-            InitTreeContextMenu();
             this.treeView.NodeMouseDoubleClick += TreeView_NodeMouseDoubleClick;
             //this.treeView.NodeMouseClick += TreeView_NodeMouseClick;
             this.treeView.MouseDown += TreeView_MouseDown;
@@ -149,57 +143,9 @@ namespace Upload.ModelView
             return await _myTreeActional.GetAllLeafNodes(treeView.Nodes);
         }
 
-        private void InitTreeFileContextMenu()
+        protected void Update()
         {
-            _treeFileContextMenu.Items.Add("Open", Properties.Resources.OpenFile, (s, e) =>
-            {
-                Open();
-            });
-            _treeFileContextMenu.Items.Add("Set open file", Properties.Resources.LaunchApp, (s, e) =>
-            {
-                TreeNode node = treeView.SelectedNode;
-                if (node?.Tag is FileModel fileModel)
-                {
-                    OnChosseRunFile?.Invoke(fileModel);
-                }
-            });
-            _treeFileContextMenu.Items.Add("Set close file", Properties.Resources.Close, (s, e) =>
-            {
-                TreeNode node = treeView.SelectedNode;
-                if (node?.Tag is FileModel fileModel)
-                {
-                    OnChosseCloseFile?.Invoke(fileModel);
-                }
-            });
-            _treeFileContextMenu.Items.Add("Get icon of file", Properties.Resources.AddAsIcon, (s, e) =>
-            {
-                TreeNode node = treeView.SelectedNode;
-                if (node?.Tag is FileModel fileModel)
-                {
-                    OnChosseMainFile?.Invoke(fileModel);
-                }
-            });
-            _treeFileContextMenu.Items.Add("Download", Properties.Resources.DownloadIcon, async (s, e) =>
-            {
-                await Download();
-            });
-            _treeFileContextMenu.Items.Add("Update", Properties.Resources.Update, async (s, e) =>
-            {
-                Update();
-            });
-            _treeFileContextMenu.Items.Add("Rename", Properties.Resources.Rename, (s, e) =>
-            {
-                Rename();
-            });
-            _treeFileContextMenu.Items.Add("Delete", Properties.Resources.Delete, async (s, e) =>
-            {
-                await Delete();
-            });
-        }
-
-        private void Update()
-        {
-            TreeNode node = _myTreeActional.GetNodeSelected();
+            TreeNode node = _myTreeActional.SelectedNode;
             if (node == null) return;
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
@@ -212,64 +158,6 @@ namespace Upload.ModelView
             }
         }
 
-        private void InitTreeFolderContextMenu()
-        {
-            _treeFolderContextMenu.Items.Add("Download", Properties.Resources.DownloadIcon, async (s, e) =>
-            {
-                await Download();
-            });
-
-            _treeFolderContextMenu.Items.Add("Create new folder", Properties.Resources.NewFolder, (s, e) =>
-            {
-                CreateFolder();
-
-            });
-
-            _treeFolderContextMenu.Items.Add("Rename", Properties.Resources.Rename, (s, e) =>
-            {
-                Rename();
-            });
-
-            _treeFolderContextMenu.Items.Add("Add files", Properties.Resources.AddFile, async (s, e) =>
-            {
-                await AddFiles();
-            });
-
-            _treeFolderContextMenu.Items.Add("Add folder", Properties.Resources.AddFromFolder, async (s, e) =>
-            {
-                await AddFolder();
-            });
-
-            _treeFolderContextMenu.Items.Add("Delete", Properties.Resources.Delete, async (s, e) =>
-            {
-                await Delete();
-            });
-        }
-
-        private void InitTreeContextMenu()
-        {
-
-            _treeContextMenu.Items.Add("Download", Properties.Resources.DownloadIcon, async (s, e) =>
-            {
-                await DownloadAll();
-            });
-
-            _treeContextMenu.Items.Add("Create new folder", Properties.Resources.NewFolder, (s, e) =>
-            {
-                CreateFolder();
-            });
-
-            _treeContextMenu.Items.Add("Add files", Properties.Resources.AddFile, async (s, e) =>
-            {
-                await AddFiles();
-            });
-
-            _treeContextMenu.Items.Add("Add folder", Properties.Resources.AddFromFolder, async (s, e) =>
-            {
-                await AddFolder();
-            });
-
-        }
 
         internal void Clear()
         {
@@ -282,7 +170,7 @@ namespace Upload.ModelView
             _isEmpty = true;
         }
 
-        private void Open()
+        protected void Open()
         {
             TreeNode treeNode = treeView.SelectedNode;
             if (treeNode != null)
@@ -294,7 +182,7 @@ namespace Upload.ModelView
             }
         }
 
-        private async Task DownloadAll()
+        protected async Task DownloadAll()
         {
             TreeNodeCollection nodes = _myTreeActional.GetNodeCollection();
             if (nodes == null) return;
@@ -310,7 +198,7 @@ namespace Upload.ModelView
             }
         }
 
-        private async Task Download()
+        protected async Task Download()
         {
             TreeNode selectedNode = treeView.SelectedNode;
             if (selectedNode == null) return;
@@ -327,7 +215,7 @@ namespace Upload.ModelView
             }
         }
 
-        private void Rename()
+        protected void Rename()
         {
             TreeNode selectedNode = treeView.SelectedNode;
             if (selectedNode == null) return;
@@ -336,7 +224,7 @@ namespace Upload.ModelView
             _myTreeActional.RenameNode(selectedNode, newName);
         }
 
-        private async Task Delete()
+        protected async Task Delete()
         {
             TreeNode selectedNode = treeView.SelectedNode;
             if (selectedNode == null) return;
@@ -347,7 +235,7 @@ namespace Upload.ModelView
             }
         }
 
-        private async Task AddFolder()
+        protected async Task AddFolder()
         {
             TreeNodeCollection nodes = _myTreeActional.GetNodeCollection();
             if (nodes == null) return;
@@ -375,7 +263,7 @@ namespace Upload.ModelView
             }
         }
 
-        private async Task AddFiles()
+        protected async Task AddFiles()
         {
             TreeNodeCollection nodes = _myTreeActional.GetNodeCollection();
             if (nodes == null) return;
@@ -390,7 +278,7 @@ namespace Upload.ModelView
             }
         }
 
-        private void CreateFolder()
+        protected void CreateFolder()
         {
             TreeNodeCollection nodes = _myTreeActional.GetNodeCollection();
             if (nodes == null) return;

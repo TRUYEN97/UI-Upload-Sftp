@@ -96,7 +96,7 @@ namespace Upload.Common
             }
         }
 
-        public static async Task RemoveRemoteFile(List<FileModel> removeFileModel)
+        public static async Task RemoveRemoteFile(ICollection<FileModel> removeFileModel)
         {
             try
             {
@@ -195,6 +195,18 @@ namespace Upload.Common
             return (await GetModelConfig<AppList>(appConfigRemotePath, zipPassword), appConfigRemotePath);
         }
 
+        internal static async Task<(UiStoreModel, string)> GetUiStoreModel(string zipPassword)
+        {
+            string uiStorePath = PathUtil.GetUiStoreRemotePath();
+            return (await GetModelConfig<UiStoreModel>(uiStorePath, zipPassword), uiStorePath);
+        }
+        
+        internal static async Task<(bool, string)> UpdateUiStoreModel(UiStoreModel storeModel, string zipPassword)
+        {
+            string uiStorePath = PathUtil.GetUiStoreRemotePath();
+            return (await UploadModel(storeModel, uiStorePath, zipPassword), uiStorePath);
+        }
+
         internal static async Task<T> GetModelConfig<T>(string path, string zipPassword)
         {
             try
@@ -232,7 +244,7 @@ namespace Upload.Common
                 CursorUtil.SetCursorIs(Cursors.Default);
             }
         }
-        internal static async Task<List<FileModel>> GetCanDeleteFileModelsAsync(string thisAppPath, List<FileModel> fileModels, AppList appList, string zipPassword)
+        internal static async Task<HashSet<FileModel>> GetCanDeleteFileModelsAsync(string thisAppPath, List<FileModel> fileModels, AppList appList, string zipPassword)
         {
             Dictionary<string, HashSet<FileModel>> canDeleteFileGroups = fileModels.GroupBy(f => f.Md5).ToDictionary(g => g.Key, g => new HashSet<FileModel>(g.Select(f => f)));
             var fileModelUsed = new Dictionary<string, FileModel>();
@@ -258,8 +270,7 @@ namespace Upload.Common
                 }).ToDictionary(f=>f.Key, f => f.Value);
                 if (canDeleteFileGroups.Count == 0) break;
             }
-            return canDeleteFileGroups.Values.SelectMany(set => set).Distinct().ToList();
+            return canDeleteFileGroups.Values.SelectMany(set => set).Distinct().ToHashSet();
         }
-
     }
 }

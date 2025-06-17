@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using AutoDownload.Gui;
 using Upload.Config;
+using Upload.Model;
 
 namespace Upload.Common
 {
@@ -161,6 +163,26 @@ namespace Upload.Common
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
             public string szTypeName;
+        }
+
+        internal static HashSet<FileModel> FilterFileModelClass(ICollection<FileModel> fileModels)
+        {
+            HashSet<FileModel> rs = new HashSet<FileModel>();
+            if (fileModels != null)
+            {
+                foreach (var fileModel in fileModels)
+                {
+                    if (fileModel is StoreFileModel storeFileModel)
+                    {
+                        rs.Add(storeFileModel.FileModel());
+                    }
+                    else
+                    {
+                        rs.Add(fileModel);
+                    }
+                }
+            }
+            return rs;
         }
 
         const uint SHGFI_ICON = 0x000000100;

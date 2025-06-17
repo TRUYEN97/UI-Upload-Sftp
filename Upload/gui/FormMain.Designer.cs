@@ -28,7 +28,7 @@ namespace Upload
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        private async Task InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.panel1 = new System.Windows.Forms.Panel();
@@ -45,6 +45,7 @@ namespace Upload
             this.cbbProgram = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.cbCloseAndClear = new System.Windows.Forms.CheckBox();
             this.cbAutoUpdate = new System.Windows.Forms.CheckBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -74,7 +75,6 @@ namespace Upload
             this.cbEnabled = new System.Windows.Forms.CheckBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtMassage = new System.Windows.Forms.TextBox();
-            this.cbCloseAndClear = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -107,7 +107,7 @@ namespace Upload
             // 
             this.btAccessUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.btAccessUser.Image = ((System.Drawing.Image)(resources.GetObject("btAccessUser.Image")));
-            this.btAccessUser.Location = new System.Drawing.Point(273, 65);
+            this.btAccessUser.Location = new System.Drawing.Point(275, 62);
             this.btAccessUser.Name = "btAccessUser";
             this.btAccessUser.Size = new System.Drawing.Size(33, 23);
             this.btAccessUser.TabIndex = 13;
@@ -117,7 +117,7 @@ namespace Upload
             // btSetting
             // 
             this.btSetting.Image = ((System.Drawing.Image)(resources.GetObject("btSetting.Image")));
-            this.btSetting.Location = new System.Drawing.Point(273, 23);
+            this.btSetting.Location = new System.Drawing.Point(273, 20);
             this.btSetting.Name = "btSetting";
             this.btSetting.Size = new System.Drawing.Size(33, 23);
             this.btSetting.TabIndex = 10;
@@ -126,7 +126,7 @@ namespace Upload
             // 
             // btDeleteStation
             // 
-            this.btDeleteStation.Location = new System.Drawing.Point(202, 65);
+            this.btDeleteStation.Location = new System.Drawing.Point(202, 62);
             this.btDeleteStation.Name = "btDeleteStation";
             this.btDeleteStation.Size = new System.Drawing.Size(48, 23);
             this.btDeleteStation.TabIndex = 12;
@@ -135,7 +135,7 @@ namespace Upload
             // 
             // btCreateStation
             // 
-            this.btCreateStation.Location = new System.Drawing.Point(148, 65);
+            this.btCreateStation.Location = new System.Drawing.Point(148, 62);
             this.btCreateStation.Name = "btCreateStation";
             this.btCreateStation.Size = new System.Drawing.Size(48, 23);
             this.btCreateStation.TabIndex = 11;
@@ -144,7 +144,7 @@ namespace Upload
             // 
             // btDeleteProduct
             // 
-            this.btDeleteProduct.Location = new System.Drawing.Point(202, 23);
+            this.btDeleteProduct.Location = new System.Drawing.Point(202, 20);
             this.btDeleteProduct.Name = "btDeleteProduct";
             this.btDeleteProduct.Size = new System.Drawing.Size(48, 23);
             this.btDeleteProduct.TabIndex = 10;
@@ -153,7 +153,7 @@ namespace Upload
             // 
             // btCreateProduct
             // 
-            this.btCreateProduct.Location = new System.Drawing.Point(148, 23);
+            this.btCreateProduct.Location = new System.Drawing.Point(148, 20);
             this.btCreateProduct.Name = "btCreateProduct";
             this.btCreateProduct.Size = new System.Drawing.Size(48, 23);
             this.btCreateProduct.TabIndex = 5;
@@ -162,7 +162,7 @@ namespace Upload
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(21, 51);
+            this.label2.Location = new System.Drawing.Point(21, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(121, 13);
             this.label2.TabIndex = 3;
@@ -173,14 +173,14 @@ namespace Upload
             // 
             this.cbbStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbStation.FormattingEnabled = true;
-            this.cbbStation.Location = new System.Drawing.Point(21, 67);
+            this.cbbStation.Location = new System.Drawing.Point(21, 64);
             this.cbbStation.Name = "cbbStation";
             this.cbbStation.Size = new System.Drawing.Size(121, 21);
             this.cbbStation.TabIndex = 2;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(21, 7);
+            this.label1.Location = new System.Drawing.Point(21, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(121, 13);
             this.label1.TabIndex = 1;
@@ -191,7 +191,7 @@ namespace Upload
             // 
             this.cbbProduct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbProduct.FormattingEnabled = true;
-            this.cbbProduct.Location = new System.Drawing.Point(21, 23);
+            this.cbbProduct.Location = new System.Drawing.Point(21, 20);
             this.cbbProduct.Name = "cbbProduct";
             this.cbbProduct.Size = new System.Drawing.Size(121, 21);
             this.cbbProduct.TabIndex = 0;
@@ -244,6 +244,19 @@ namespace Upload
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(997, 442);
             this.panel3.TabIndex = 15;
+            // 
+            // cbCloseAndClear
+            // 
+            this.cbCloseAndClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbCloseAndClear.AutoSize = true;
+            this.cbCloseAndClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCloseAndClear.Location = new System.Drawing.Point(394, 14);
+            this.cbCloseAndClear.Name = "cbCloseAndClear";
+            this.cbCloseAndClear.Size = new System.Drawing.Size(114, 17);
+            this.cbCloseAndClear.TabIndex = 23;
+            this.cbCloseAndClear.Text = "Close and clear";
+            this.cbCloseAndClear.UseVisualStyleBackColor = true;
             // 
             // cbAutoUpdate
             // 
@@ -598,19 +611,6 @@ namespace Upload
             this.txtMassage.Size = new System.Drawing.Size(669, 94);
             this.txtMassage.TabIndex = 2;
             this.txtMassage.TabStop = false;
-            // 
-            // cbCloseAndClear
-            // 
-            this.cbCloseAndClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbCloseAndClear.AutoSize = true;
-            this.cbCloseAndClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbCloseAndClear.Location = new System.Drawing.Point(394, 14);
-            this.cbCloseAndClear.Name = "cbCloseAndClear";
-            this.cbCloseAndClear.Size = new System.Drawing.Size(114, 17);
-            this.cbCloseAndClear.TabIndex = 23;
-            this.cbCloseAndClear.Text = "Close and clear";
-            this.cbCloseAndClear.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 

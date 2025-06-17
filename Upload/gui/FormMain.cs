@@ -198,7 +198,6 @@ namespace Upload
                     string cmd = $"cd \"{dir}\" && {Path.GetFileName(path)}";
                     Util.SafeInvoke(TxtOpenCmd, () => { TxtOpenCmd.Text = cmd; });
                 }
-
             }
         }
         
@@ -230,6 +229,10 @@ namespace Upload
             string stationAccUserPath = PathUtil.GetStationAccessUserPath(_locationManagement.Location);
             _stationAccessUserForm.LoadModel(stationAccUserPath);
             _stationAccessUserForm.ShowDialog();
+        }
+
+        private void btUpdateUiStore_Click(object sender, EventArgs e)
+        {
         }
     }
 }

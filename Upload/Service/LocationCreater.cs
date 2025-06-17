@@ -172,8 +172,7 @@ namespace Upload
                         Util.ShowDeletedMessager("Station", loca.Station);
                         return true;
                     }
-                    var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
-                    AppList appList = responceRs.Item1;
+                    var (appList, _) = await TranferUtil.GetAppListModel(loca, zipPassword);
                     if (appList?.ProgramPaths == null || appList?.ProgramPaths.Count == 0)
                     {
                         if (await sftp.DeleteFolder(path))
@@ -239,8 +238,7 @@ namespace Upload
                 {
                     return false;
                 }
-                var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
-                AppList model = responceRs.Item1;
+                var (model, remoteAppListPath) = await TranferUtil.GetAppListModel(loca, zipPassword);
                 if (model == null)
                 {
                     model = new AppList();
@@ -254,7 +252,7 @@ namespace Upload
                         if (!await TranferUtil.UploadModel(new AppModel()
                         {
                             RemoteStoreDir = PathUtil.GetCommonPath(loca),
-                            RemoteAppListPath = responceRs.Item2,
+                            RemoteAppListPath = remoteAppListPath,
                             Path = programDataPath
                         }, programDataPath, zipPassword))
                         {
@@ -303,8 +301,7 @@ namespace Upload
                         Util.ShowConnectFailedMessager();
                         return false;
                     }
-                    var responceRs = await TranferUtil.GetAppListModel(loca, zipPassword);
-                    AppList appList = responceRs.Item1;
+                    var (appList, remoteAppListPath) = await TranferUtil.GetAppListModel(loca, zipPassword);
                     if (appList?.ProgramPaths != null)
                     {
                         if (appList.ProgramPaths.TryGetValue(loca.AppName, out var modelPath))
@@ -312,13 +309,13 @@ namespace Upload
                             AppModel appModel = await TranferUtil.GetModelConfig<AppModel>(modelPath.AppPath, zipPassword);
                             if (appModel?.FileModels != null)
                             {
-                                List<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(modelPath.AppPath, appModel.FileModels.ToList(), appList, zipPassword);
+                                HashSet<FileModel> canDeletes = await TranferUtil.GetCanDeleteFileModelsAsync(modelPath.AppPath, appModel.FileModels.ToList(), appList, zipPassword);
                                 await TranferUtil.RemoveRemoteFile(canDeletes);
                                 await sftp.DeleteFile(modelPath.AppPath);
                             }
                             await sftp.DeleteFile(modelPath.AccectUserPath);
                             appList.ProgramPaths.Remove(loca.AppName);
-                            if (!await TranferUtil.UploadModel(appList, responceRs.Item2, zipPassword))
+                            if (!await TranferUtil.UploadModel(appList, remoteAppListPath, zipPassword))
                             {
                                 Util.ShowDeleteFailedMessager(location.AppName,"");
                                 return false;
